@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriOpti AI Pro - Precision Cultivator Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#2b3544",
+                        "inverse-surface": "#d9e3f6",
+                        "surface-container-low": "#121c2a",
+                        "secondary": "#ffb77d",
+                        "on-tertiary-container": "#2bb0f5",
+                        "surface-container-lowest": "#050f1c",
+                        "surface-container-high": "#212b39",
+                        "on-primary-fixed": "#002114",
+                        "tertiary-fixed": "#c9e6ff",
+                        "on-background": "#d9e3f6",
+                        "on-surface-variant": "#c1c8c2",
+                        "secondary-fixed-dim": "#ffb77d",
+                        "on-surface": "#d9e3f6",
+                        "surface-tint": "#95d4b3",
+                        "inverse-on-surface": "#27313f",
+                        "background": "#091421",
+                        "on-tertiary": "#00344d",
+                        "tertiary-container": "#00405e",
+                        "surface-bright": "#303a48",
+                        "outline": "#8b938d",
+                        "on-secondary-fixed": "#2f1500",
+                        "surface": "#091421",
+                        "surface-container": "#16202e",
+                        "primary": "#95d4b3",
+                        "inverse-primary": "#2c694e",
+                        "on-primary-container": "#76b394",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "primary-fixed": "#b1f0ce",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "surface-dim": "#091421",
+                        "outline-variant": "#414844",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#89ceff",
+                        "primary-fixed-dim": "#95d4b3",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#0e5138",
+                        "surface-variant": "#2b3544",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-primary": "#003824",
+                        "secondary-container": "#d97707",
+                        "on-secondary-container": "#432100",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#4d2600",
+                        "primary-container": "#00452e",
+                        "error-container": "#93000a"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #091421; color: #d9e3f6; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .glass-panel { backdrop-filter: blur(12px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .pulse-ring { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar Shell -->
+
+<div class="flex ">
+<!-- SideNavBar Shell -->
+
+<!-- Main Content Canvas -->
+<main class=" flex-1 p-8 bg-surface">
+<!-- Hero Header -->
+<div class="mb-12 flex justify-between items-end">
+<div>
+<h1 class="text-5xl font-manrope font-extrabold text-on-surface tracking-tight leading-tight">Earth’s Pulse</h1>
+<p class="text-on-surface-variant font-body mt-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-ring"></span>
+                        Live system status: All sensors operational in Doddaballapura Sector A.
+                    </p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 rounded-sm border border-outline-variant/30 text-xs font-bold uppercase tracking-widest hover:bg-surface-container-high transition-colors">Export Data</button>
+<button class="px-6 py-2 rounded-sm bg-gradient-to-br from-emerald-400 to-on-primary-container text-on-primary font-bold text-xs uppercase tracking-widest shadow-xl shadow-emerald-950/40">Real-time Stream</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Top Metrics Row (Spans 8) -->
+<div class="col-span-12 lg:col-span-8 grid grid-cols-4 gap-6">
+<div class="col-span-2 md:col-span-1 p-6 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-emerald-500/30 transition-all group">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Soil Moisture</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-manrope font-bold text-primary">45%</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="water_drop">water_drop</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%] rounded-full"></div>
+</div>
+</div>
+<div class="col-span-2 md:col-span-1 p-6 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-emerald-500/30 transition-all">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Air Temp</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-manrope font-bold text-secondary">28°C</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="device_thermostat">device_thermostat</span>
+</div>
+<p class="mt-4 text-[10px] text-slate-500 font-medium">Optimal for Maize growth</p>
+</div>
+<div class="col-span-2 md:col-span-1 p-6 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-emerald-500/30 transition-all">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Energy Avg</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-manrope font-bold text-tertiary">82%</span>
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="bolt">bolt</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[82%] rounded-full"></div>
+</div>
+</div>
+<div class="col-span-2 md:col-span-1 p-6 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-emerald-500/30 transition-all">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Alerts</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-manrope font-bold text-error">02</span>
+<span class="material-symbols-outlined text-error text-sm" data-icon="warning">warning</span>
+</div>
+<p class="mt-4 text-[10px] text-error/70 font-bold uppercase">Critical Irrigation</p>
+</div>
+</div>
+<!-- Weather Section (Spans 4) -->
+<div class="col-span-12 lg:col-span-4 p-8 rounded-xl bg-surface-container-high relative overflow-hidden flex flex-col justify-between">
+<img alt="Atmospheric weather overlay" class="absolute inset-0 opacity-20 object-cover mix-blend-overlay pointer-events-none" data-alt="Dramatic storm clouds gathering over a sprawling rural landscape with distant lightning and deep blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy0F0lfdvi_NY-p5MUeq6oElZ64eBJydNpuF73oQS93NK7dHj44zXedmf6lg8dFwEX2e-D4yM7JuizntIRsJuRH9o6bKJC_etyDRDk5D5tSHEDM0_9wBkFHCTPCI5FDdoLuJ5_2nDajdPkC_u4Uw13fh6rO9leqZ9amKjAaVMRPYtZxpDosc1gcacNz1UYi13RaZvewig3RNX1rQR1JvDPLoko0ELqJbBZpuedi70mECOgiaPOFT9a7fNgilWuhBTv6_gxQLxTi00"/>
+        <div class="relative z-10 w-full">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 id="loc-name" class="text-sm font-manrope font-bold uppercase tracking-[0.2em] text-on-surface">Doddaballapura</h3>
+                    <p id="weather-desc" class="text-3xl font-manrope font-extrabold text-on-surface mt-1">Partly Cloudy</p>
+                    <p id="weather-temp" class="text-2xl font-manrope font-bold text-emerald-400 mt-1">28°C</p>
+                </div>
+                <span id="weather-icon" class="material-symbols-outlined text-5xl text-secondary" data-icon="partly_cloudy_day" style="font-variation-settings: 'FILL' 1;">partly_cloudy_day</span>
+            </div>
+<div class="mt-8 flex justify-between items-center text-center">
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-500 uppercase">Mon</p>
+<span class="material-symbols-outlined text-primary/70" data-icon="rainy">rainy</span>
+<p class="text-xs font-bold">24°</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-500 uppercase">Tue</p>
+<span class="material-symbols-outlined text-secondary" data-icon="wb_sunny">wb_sunny</span>
+<p class="text-xs font-bold">29°</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-500 uppercase">Wed</p>
+<span class="material-symbols-outlined text-tertiary" data-icon="cloud">cloud</span>
+<p class="text-xs font-bold">26°</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-500 uppercase">Thu</p>
+<span class="material-symbols-outlined text-secondary" data-icon="partly_cloudy_day">partly_cloudy_day</span>
+<p class="text-xs font-bold">28°</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-500 uppercase">Fri</p>
+<span class="material-symbols-outlined text-primary/70" data-icon="rainy">rainy</span>
+<p class="text-xs font-bold">23°</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Map Preview (Spans 8) -->
+<div class="col-span-12 lg:col-span-8 h-[400px] rounded-xl bg-surface-container-low border border-outline-variant/10 overflow-hidden relative group font-body">
+    <!-- Base Map Image -->
+    <div id="map-container" class="absolute inset-0 z-0 bg-slate-900 flex items-center justify-center">
+        <!-- New Farm Land Image -->
+        <img id="farm-map-img" alt="Field Map" style="transition: transform 0.5s ease" class="w-full h-full object-cover opacity-80 group-hover:opacity-90 transition-all duration-700" data-alt="Aerial view of farm fields" data-location="Doddaballapura" src="farm_image.jpg"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent pointer-events-none"></div>
+    </div>
+    
+    <!-- Interactive Overlay Grid -->
+    <div class="absolute inset-0 z-0 grid grid-cols-4 grid-rows-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 1-A Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 1-A</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 1-B Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 1-B</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 1-C Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 1-C</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 1-D Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 1-D</span></div>
+        
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 2-A Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 2-A</span></div>
+        <div class="border border-emerald-500/20 bg-emerald-500/10 cursor-pointer transition-all flex items-end p-2" onclick="alert('Sector 2-B Active Survey Data')"><span class="text-[10px] font-bold text-primary">Sector 2-B (Active)</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 2-C Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 2-C</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 2-D Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 2-D</span></div>
+        
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 3-A Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 3-A</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 3-B Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 3-B</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 3-C Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 3-C</span></div>
+        <div class="border border-emerald-500/20 hover:bg-emerald-500/20 cursor-pointer backdrop-blur-[2px] transition-all flex items-end p-2" onclick="alert('Sector 3-D Data Loaded')"><span class="text-[10px] font-bold text-white opacity-0 hover:opacity-100">Sector 3-D</span></div>
+    </div>
+
+    <!-- Drone Flight Path SVG -->
+    <svg class="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="none">
+        <path d="M 240,200 C 350,150 450,100 550,260" 
+              fill="none" 
+              stroke="#95d4b3" 
+              stroke-width="2" 
+              stroke-dasharray="8,8" 
+              style="stroke-dashoffset: 1000; animation: dash 20s linear infinite;">
+        </path>
+    </svg>
+    <style>
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+
+    <!-- Map Overlays -->
+    <div class="absolute top-4 left-4 z-20 space-y-2 pointer-events-none">
+        <div class="bg-surface/90 backdrop-blur-md p-4 rounded-xl border border-emerald-500/30 shadow-lg shadow-emerald-900/20">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest leading-none">Scanning in Progress</p>
+            </div>
+            <p class="text-base font-manrope font-bold text-on-surface">Sector 2-B Drone Grid</p>
+        </div>
+    </div>
+    <div class="absolute top-4 right-4 z-30">
+        <button onclick="detectLocation()" class="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform">
+            <span class="material-symbols-outlined text-sm">my_location</span>
+            Detect Current Location
+        </button>
+    </div>
+
+    <!-- Interactive Marker Pulse (Drone) -->
+    <div class="absolute top-[50%] left-[30%] z-20 cursor-pointer group/marker hover:z-30">
+        <div class="w-5 h-5 bg-emerald-400 rounded-full border-2 border-white flex items-center justify-center shadow-lg transform transition-transform group-hover/marker:scale-125">
+            <div class="absolute w-16 h-16 bg-emerald-400/30 rounded-full animate-ping"></div>
+        </div>
+        <!-- Tooltip -->
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-40 p-3 bg-surface-container-highest rounded-xl opacity-0 scale-95 group-hover/marker:opacity-100 group-hover/marker:scale-100 transition-all border border-outline-variant/30 text-center shadow-2xl pointer-events-none origin-bottom">
+            <p class="text-xs font-bold text-on-surface mb-1">Unit #4092</p>
+            <p class="text-[10px] text-primary">Altitude: 120m</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Status: Deep Imaging</p>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-surface-container-highest"></div>
+        </div>
+    </div>
+
+    <!-- Interactive Marker Pulse 2 (Sensor) -->
+    <div class="absolute top-[65%] left-[68%] z-20 cursor-pointer group/marker hover:z-30">
+        <div class="w-4 h-4 bg-tertiary rounded-full border-2 border-white flex items-center justify-center shadow-lg transform transition-transform group-hover/marker:scale-125">
+            <div class="absolute w-12 h-12 bg-tertiary/20 rounded-full animate-ping"></div>
+        </div>
+        <!-- Tooltip -->
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-32 p-3 bg-surface-container-highest rounded-xl opacity-0 scale-95 group-hover/marker:opacity-100 group-hover/marker:scale-100 transition-all border border-outline-variant/30 text-center shadow-2xl pointer-events-none origin-bottom">
+            <p class="text-xs font-bold text-on-surface mb-1">Sensor Alpha</p>
+            <p class="text-[10px] text-tertiary">Moisture: 42%</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Temp: 28°C</p>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-surface-container-highest"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
+        <button class="w-10 h-10 rounded-xl bg-surface/90 backdrop-blur-sm flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors shadow-lg active:scale-95 group/btn" onclick="const img = this.parentElement.parentElement.querySelector('img'); const scale = parseFloat(img.style.transform.replace('scale(', '').replace(')', '') || 1) + 0.2; img.style.transform = 'scale(' + scale + ')';">
+            <span class="material-symbols-outlined text-on-surface group-hover/btn:text-emerald-400 transition-colors" data-icon="add">add</span>
+        </button>
+        <button class="w-10 h-10 rounded-xl bg-surface/90 backdrop-blur-sm flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors shadow-lg active:scale-95 group/btn" onclick="const img = this.parentElement.parentElement.querySelector('img'); const scale = Math.max(1, parseFloat(img.style.transform.replace('scale(', '').replace(')', '') || 1) - 0.2); img.style.transform = 'scale(' + scale + ')';">
+            <span class="material-symbols-outlined text-on-surface group-hover/btn:text-emerald-400 transition-colors" data-icon="remove">remove</span>
+        </button>
+    </div>
+</div>
+<!-- Quick Fleet Status (Spans 4) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="p-8 rounded-xl bg-surface-container-high border border-outline-variant/10">
+<h3 class="text-sm font-manrope font-bold uppercase tracking-widest text-on-surface mb-6">Fleet Allocation</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low hover:bg-emerald-500/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+<span class="text-sm font-medium">Active Units</span>
+</div>
+<span class="text-lg font-manrope font-bold">12</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low hover:bg-emerald-500/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-sm font-medium">Idle/Charging</span>
+</div>
+<span class="text-lg font-manrope font-bold">04</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low hover:bg-emerald-500/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium">Maintenance</span>
+</div>
+<span class="text-lg font-manrope font-bold">02</span>
+</div>
+</div>
+<button class="w-full mt-6 py-2.5 rounded-sm border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500/10 transition-all">Manage Assets</button>
+</div>
+<!-- Recent Activity Timeline -->
+<div class="p-8 rounded-xl bg-surface-container-lowest border border-outline-variant/10">
+<h3 class="text-sm font-manrope font-bold uppercase tracking-widest text-on-surface mb-6">Field Log</h3>
+<div class="space-y-6">
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-emerald-400"></div>
+<p class="text-[10px] font-bold text-emerald-400 uppercase leading-none">Just Now</p>
+<p class="text-sm font-medium mt-1">Drone Scan Finished at Field A</p>
+<p class="text-[10px] text-slate-500 mt-1">High NDVI correlation detected.</p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-tertiary"></div>
+<p class="text-[10px] font-bold text-tertiary uppercase leading-none">42m ago</p>
+<p class="text-sm font-medium mt-1">Irrigation Valve #04 Opened</p>
+<p class="text-[10px] text-slate-500 mt-1">Target: 400L / Sector B</p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-slate-600"></div>
+<p class="text-[10px] font-bold text-slate-500 uppercase leading-none">2h ago</p>
+<p class="text-sm font-medium mt-1">Soil Sample Uploaded</p>
+<p class="text-[10px] text-slate-500 mt-1">Nitrogen levels slightly low in NW.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    async function detectLocation() {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser');
+            return;
+        }
+        
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span> Locating...';
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            // 1. Update Map to Google Maps Iframe
+            const mapContainer = document.getElementById('map-container');
+            mapContainer.innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${lat},${lon}&hl=en&z=15&output=embed"></iframe>`;
+            
+            // 2. Fetch City Name
+            try {
+                const geoReq = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                const geoData = await geoReq.json();
+                const city = geoData.address.city || geoData.address.town || geoData.address.village || 'Local Farm';
+                document.getElementById('loc-name').textContent = city;
+            } catch (e) { console.error('Geocoding failed', e); }
+            
+            // 3. Fetch Weather from Open-Meteo
+            try {
+                const weatherReq = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const weatherData = await weatherReq.json();
+                const cw = weatherData.current_weather;
+                
+                document.getElementById('weather-temp').textContent = cw.temperature + '°C';
+                
+                let desc = 'Clear';
+                let icon = 'sunny';
+                if(cw.weathercode > 0) { desc = 'Cloudy'; icon = 'cloud'; }
+                if(cw.weathercode > 40) { desc = 'Foggy'; icon = 'foggy'; }
+                if(cw.weathercode > 50) { desc = 'Rainy'; icon = 'rainy'; }
+                if(cw.weathercode > 70) { desc = 'Snow'; icon = 'ac_unit'; }
+                
+                document.getElementById('weather-desc').textContent = desc;
+                document.getElementById('weather-icon').textContent = icon;
+            } catch (e) { console.error('Weather fetch failed', e); }
+            
+            btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Synced';
+            setTimeout(() => btn.remove(), 3000); // Remove button after success
+        }, (err) => {
+            alert('Unable to retrieve your location');
+            btn.innerHTML = originalText;
+        });
+    }
+</script>
+</body></html>

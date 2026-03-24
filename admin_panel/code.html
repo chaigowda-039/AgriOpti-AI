@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Panel | AgriOpti AI Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          'surface': '#091421', 'surface-low': '#121c2a', 'surface-high': '#212b39',
+          'surface-highest': '#2b3544', 'surface-bright': '#303a48',
+          'on-surface': '#d9e3f6', 'on-surface-variant': '#c1c8c2',
+          'primary': '#95d4b3', 'on-primary': '#003824',
+          'secondary': '#ffb77d', 'tertiary': '#89ceff',
+          'error': '#ffb4ab', 'outline-variant': '#414844',
+          'primary-container': '#00452e',
+        },
+        fontFamily: { headline: ['Manrope'], body: ['Inter'] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  body { font-family: 'Inter', sans-serif; background: #091421; color: #d9e3f6; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #091421; }
+  ::-webkit-scrollbar-thumb { background: #2b3544; border-radius: 10px; }
+  .glass { background: rgba(18,28,42,0.7); backdrop-filter: blur(16px); }
+  .tab-active { background: rgba(149,212,179,0.1); color: #95d4b3; border-color: rgba(149,212,179,0.3); }
+  .otp-input::-webkit-inner-spin-button, .otp-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  @keyframes slideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .animate-slide { animation: slideIn 0.35s ease both; }
+  .plan-card { transition: all 0.3s ease; }
+  .plan-card:hover { transform: translateY(-4px); }
+  .plan-popular { box-shadow: 0 0 40px rgba(149,212,179,0.15); }
+</style>
+</head>
+<body class="pt-8 pb-16 px-6 min-h-screen">
+<div class="max-w-6xl mx-auto">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-10">
+    <div>
+      <span class="text-primary font-body text-xs tracking-[0.3em] uppercase mb-1 block">Control Center</span>
+      <h1 class="text-4xl font-black font-headline tracking-tighter">Admin <span class="text-primary">Panel</span></h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+      </div>
+      <div>
+        <p class="text-sm font-bold">Admin User</p>
+        <p class="text-xs text-on-surface-variant">Super Administrator</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
+    <button onclick="showTab('overview')" id="tab-overview" class="tab-btn tab-active flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all">
+      <span class="material-symbols-outlined text-sm">dashboard</span> Overview
+    </button>
+    <button onclick="showTab('security')" id="tab-security" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap transition-all hover:text-on-surface">
+      <span class="material-symbols-outlined text-sm">security</span> Security & 2FA
+    </button>
+    <button onclick="showTab('auth')" id="tab-auth" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap transition-all hover:text-on-surface">
+      <span class="material-symbols-outlined text-sm">key</span> Authentication
+    </button>
+    <button onclick="showTab('premium')" id="tab-premium" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap transition-all hover:text-on-surface">
+      <span class="material-symbols-outlined text-sm">workspace_premium</span> Premium Plans
+    </button>
+    <button onclick="showTab('billing')" id="tab-billing" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap transition-all hover:text-on-surface">
+      <span class="material-symbols-outlined text-sm">credit_card</span> Billing
+    </button>
+    <button onclick="showTab('users')" id="tab-users" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap transition-all hover:text-on-surface">
+      <span class="material-symbols-outlined text-sm">group</span> Users
+    </button>
+  </div>
+
+  <!-- ═══════════════ OVERVIEW ═══════════════ -->
+  <div id="tab-content-overview" class="animate-slide">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Total Users</p>
+        <h3 class="text-3xl font-black font-headline text-primary">1,284</h3>
+        <p class="text-[10px] text-primary/60 mt-1">↑ 12% this month</p>
+      </div>
+      <div class="glass p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Premium Users</p>
+        <h3 class="text-3xl font-black font-headline text-secondary">348</h3>
+        <p class="text-[10px] text-secondary/60 mt-1">27% conversion rate</p>
+      </div>
+      <div class="glass p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Active Vehicles</p>
+        <h3 class="text-3xl font-black font-headline text-tertiary">94</h3>
+        <p class="text-[10px] text-tertiary/60 mt-1">Fleet across all accounts</p>
+      </div>
+      <div class="glass p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">MRR</p>
+        <h3 class="text-3xl font-black font-headline text-on-surface">₹4.2L</h3>
+        <p class="text-[10px] text-on-surface-variant/60 mt-1">Monthly Recurring Revenue</p>
+      </div>
+    </div>
+    <!-- Recent Activity -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-6">
+      <h3 class="font-headline font-bold text-lg mb-5">Recent Activity</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4 py-3 border-b border-outline-variant/5">
+          <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1">person_add</span></div>
+          <div class="flex-1"><p class="text-sm font-semibold">New user registered</p><p class="text-xs text-on-surface-variant">ram.krishna@agrifarm.in — verified via email</p></div>
+          <span class="text-[10px] text-on-surface-variant">2 min ago</span>
+        </div>
+        <div class="flex items-center gap-4 py-3 border-b border-outline-variant/5">
+          <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings:'FILL' 1">payments</span></div>
+          <div class="flex-1"><p class="text-sm font-semibold">Premium Pro subscription</p><p class="text-xs text-on-surface-variant">sujatha.fields@gmail.com — ₹2,499/mo plan activated</p></div>
+          <span class="text-[10px] text-on-surface-variant">18 min ago</span>
+        </div>
+        <div class="flex items-center gap-4 py-3 border-b border-outline-variant/5">
+          <div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-error text-sm" style="font-variation-settings:'FILL' 1">warning</span></div>
+          <div class="flex-1"><p class="text-sm font-semibold">Failed 2FA attempt</p><p class="text-xs text-on-surface-variant">IP: 203.88.14.2 — Account locked for 30 mins</p></div>
+          <span class="text-[10px] text-on-surface-variant">1 hr ago</span>
+        </div>
+        <div class="flex items-center gap-4 py-3">
+          <div class="w-8 h-8 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings:'FILL' 1">directions_car</span></div>
+          <div class="flex-1"><p class="text-sm font-semibold">3 vehicles registered</p><p class="text-xs text-on-surface-variant">Anand Farms — Drone x2, Tractor x1 under Fleet PRO</p></div>
+          <span class="text-[10px] text-on-surface-variant">3 hrs ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECURITY & 2FA ═══════════════ -->
+  <div id="tab-content-security" class="hidden animate-slide space-y-6">
+    <!-- 2FA Setup -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings:'FILL' 1">phone_iphone</span>
+        </div>
+        <div>
+          <h3 class="font-headline font-bold text-lg">Two-Factor Authentication (2FA)</h3>
+          <p class="text-xs text-on-surface-variant">Add an extra layer of security to your account</p>
+        </div>
+        <div class="ml-auto flex items-center gap-3">
+          <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Enabled</span>
+          <div class="relative cursor-pointer" onclick="toggle2FA()">
+            <input id="tfa-toggle" type="checkbox" checked class="sr-only peer"/>
+            <div class="w-12 h-6 bg-surface-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary/20"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2FA Methods -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div id="2fa-sms" onclick="select2FA('sms')" class="p-4 rounded-xl border-2 border-primary/40 bg-primary/5 cursor-pointer transition-all">
+          <span class="material-symbols-outlined text-primary mb-2" style="font-variation-settings:'FILL' 1">sms</span>
+          <h4 class="font-bold text-sm mb-1">SMS OTP</h4>
+          <p class="text-xs text-on-surface-variant">Send a 6-digit code to your phone number</p>
+          <span class="text-[10px] font-bold text-primary mt-2 block">✓ Active</span>
+        </div>
+        <div id="2fa-email" onclick="select2FA('email')" class="p-4 rounded-xl border border-outline-variant/20 cursor-pointer transition-all hover:border-primary/30">
+          <span class="material-symbols-outlined text-on-surface-variant mb-2" style="font-variation-settings:'FILL' 1">email</span>
+          <h4 class="font-bold text-sm mb-1">Email OTP</h4>
+          <p class="text-xs text-on-surface-variant">Send a verification code to your registered email</p>
+          <span class="text-[10px] font-bold text-on-surface-variant mt-2 block">Click to enable</span>
+        </div>
+        <div id="2fa-app" onclick="select2FA('app')" class="p-4 rounded-xl border border-outline-variant/20 cursor-pointer transition-all hover:border-primary/30">
+          <span class="material-symbols-outlined text-on-surface-variant mb-2" style="font-variation-settings:'FILL' 1">qr_code_scanner</span>
+          <h4 class="font-bold text-sm mb-1">Authenticator App</h4>
+          <p class="text-xs text-on-surface-variant">Use Google Authenticator or Authy app</p>
+          <span class="text-[10px] font-bold text-on-surface-variant mt-2 block">Click to enable</span>
+        </div>
+      </div>
+
+      <!-- OTP Demo -->
+      <div class="bg-surface-highest/50 rounded-xl p-6 border border-outline-variant/10">
+        <h4 class="font-bold text-sm mb-1">Test Your 2FA Code</h4>
+        <p class="text-xs text-on-surface-variant mb-4">Enter the 6-digit code sent to your device to verify your 2FA is working</p>
+        <div class="flex gap-3 mb-4">
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+          <span class="text-2xl text-on-surface-variant flex items-center">—</span>
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+          <input type="number" maxlength="1" class="otp-input w-12 h-14 bg-surface-low border border-outline-variant/30 rounded-xl text-center text-xl font-black text-primary focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" placeholder="·"/>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="verifyOTP()" class="px-6 py-2.5 bg-primary/80 hover:bg-primary text-on-primary font-bold text-xs uppercase tracking-widest rounded-lg transition-all">Verify Code</button>
+          <button onclick="sendOTP()" class="px-6 py-2.5 border border-outline-variant/30 hover:border-primary/40 text-on-surface-variant text-xs font-bold uppercase tracking-widest rounded-lg transition-all">Resend Code</button>
+          <div id="otp-result" class="hidden text-xs font-bold"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Sessions -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-5">Active Sessions</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+          <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1">computer</span>
+          <div class="flex-1">
+            <p class="text-sm font-bold">Chrome on Windows <span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full ml-2">Current</span></p>
+            <p class="text-xs text-on-surface-variant">Bengaluru, Karnataka — 203.88.14.xx · Active now</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-surface-highest/50 rounded-xl border border-outline-variant/10">
+          <span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL' 1">phone_android</span>
+          <div class="flex-1">
+            <p class="text-sm font-bold">AgriOpti App on Android</p>
+            <p class="text-xs text-on-surface-variant">Doddaballapura — 103.214.xx.xx · Last active 2h ago</p>
+          </div>
+          <button class="text-xs text-error hover:underline font-bold">Revoke</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ AUTHENTICATION ═══════════════ -->
+  <div id="tab-content-auth" class="hidden animate-slide space-y-6">
+    <!-- Google OAuth -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-6">Sign-In Methods</h3>
+      <div class="space-y-4">
+        <!-- Google OAuth -->
+        <div class="flex items-center justify-between p-5 border border-outline-variant/20 rounded-xl hover:border-primary/30 transition-all">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-outline-variant/20">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-sm">Google OAuth 2.0</p>
+              <p class="text-xs text-on-surface-variant">Allow users to sign in with their Google account</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Configured</span>
+            <div class="relative cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer"/>
+              <div class="w-10 h-5 bg-primary/20 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email/Password -->
+        <div class="flex items-center justify-between p-5 border border-outline-variant/20 rounded-xl hover:border-primary/30 transition-all">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings:'FILL' 1">email</span>
+            </div>
+            <div>
+              <p class="font-bold text-sm">Email & Password</p>
+              <p class="text-xs text-on-surface-variant">Traditional email/password with email verification required</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Active</span>
+            <div class="relative cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer"/>
+              <div class="w-10 h-5 bg-primary/20 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Verification Flow -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-2">Email Verification Flow</h3>
+      <p class="text-xs text-on-surface-variant mb-6">When a user signs up, this verification email is automatically dispatched.</p>
+      <div class="bg-surface-low rounded-xl p-6 border border-outline-variant/10 max-w-md">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1">mark_email_read</span></div>
+          <div>
+            <p class="text-[10px] text-on-surface-variant">From: noreply@agriopti.ai</p>
+            <p class="text-[10px] text-on-surface-variant">Subject: Verify your AgriOpti AI Account</p>
+          </div>
+        </div>
+        <div class="border-t border-outline-variant/10 pt-4">
+          <p class="text-sm font-bold mb-2">Hello, Farmer 👋</p>
+          <p class="text-xs text-on-surface-variant mb-4">Click the button below to verify your email and activate your AgriOpti AI account.</p>
+          <div class="bg-primary/80 text-on-primary text-center py-3 px-6 rounded-lg text-xs font-black uppercase tracking-widest mb-3 cursor-pointer">✓ Verify My Account</div>
+          <p class="text-[10px] text-on-surface-variant">This link expires in 24 hours. If you didn't register, ignore this email.</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <button onclick="simulateVerification()" class="px-5 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 font-bold text-xs uppercase tracking-widest rounded-lg transition-all">Simulate Sending</button>
+        <div id="verify-result" class="hidden items-center gap-2 text-xs font-bold text-primary bg-primary/10 px-4 py-2 rounded-lg border border-primary/20"></div>
+      </div>
+    </div>
+
+    <!-- Security Policy -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-5">Security Policies</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase text-on-surface-variant tracking-widest">Min Password Length</label>
+          <input type="number" value="10" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase text-on-surface-variant tracking-widest">Max Login Attempts</label>
+          <input type="number" value="5" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase text-on-surface-variant tracking-widest">Session Timeout (minutes)</label>
+          <input type="number" value="60" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase text-on-surface-variant tracking-widest">Email Verification</label>
+          <select class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm">
+            <option>Required (Block until verified)</option>
+            <option>Optional (Allow limited access)</option>
+          </select>
+        </div>
+      </div>
+      <button class="mt-5 px-6 py-3 bg-primary/80 hover:bg-primary text-on-primary font-bold text-xs uppercase tracking-widest rounded-lg transition-all">Save Policy</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PREMIUM PLANS ═══════════════ -->
+  <div id="tab-content-premium" class="hidden animate-slide">
+    <div class="text-center mb-10">
+      <p class="text-primary text-xs tracking-widest uppercase mb-2">Flexible Pricing</p>
+      <h2 class="text-4xl font-black font-headline tracking-tighter mb-3">Choose Your <span class="text-primary">Plan</span></h2>
+      <p class="text-on-surface-variant text-sm max-w-xl mx-auto">Unlock the full power of AgriOpti AI. Choose the plan that fits your farm's needs. All plans include email verification and 2FA security.</p>
+      <div class="flex items-center justify-center gap-4 mt-5">
+        <span class="text-sm font-bold">Monthly</span>
+        <div class="relative cursor-pointer" onclick="toggleBilling()">
+          <input id="billing-toggle" type="checkbox" class="sr-only peer"/>
+          <div class="w-12 h-6 bg-surface-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary/20"></div>
+        </div>
+        <span class="text-sm font-bold">Annually <span class="text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full ml-1">Save 20%</span></span>
+      </div>
+    </div>
+
+    <!-- Plan Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <!-- Free -->
+      <div class="plan-card glass rounded-2xl border border-outline-variant/20 p-7 flex flex-col">
+        <div class="mb-5">
+          <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Starter</span>
+          <h3 class="text-3xl font-black font-headline mt-1">Free</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Perfect for exploring the platform</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-7">
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Up to 2 vehicles registered</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Dashboard + Weather Access</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Basic Soil Analysis</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-on-surface-variant/40 text-sm">remove</span> <span class="text-on-surface-variant/50">Live Fleet Map</span></li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-on-surface-variant/40 text-sm">remove</span> <span class="text-on-surface-variant/50">AutoIrrigate™</span></li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-on-surface-variant/40 text-sm">remove</span> <span class="text-on-surface-variant/50">Drone Monitoring</span></li>
+        </ul>
+        <button class="w-full py-3 border border-outline-variant/30 hover:border-primary/40 text-on-surface-variant font-bold text-xs uppercase tracking-widest rounded-xl transition-all">Current Plan</button>
+      </div>
+
+      <!-- Pro -->
+      <div class="plan-card plan-popular glass rounded-2xl border-2 border-primary/40 p-7 flex flex-col relative" style="background:rgba(149,212,179,0.04)">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest">Most Popular</div>
+        <div class="mb-5">
+          <span class="text-[10px] font-black uppercase tracking-widest text-primary">Agri Pro</span>
+          <h3 class="text-3xl font-black font-headline mt-1">₹2,499<span class="text-base font-normal text-on-surface-variant">/mo</span></h3>
+          <p class="text-xs text-on-surface-variant mt-1">For growing farms and cooperatives</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-7">
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Up to <strong>15 vehicles</strong></li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> All Dashboard + Analytics</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Live Fleet Map + GPS Tracking</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> AutoIrrigate™ Full Access</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> AI Soil & Crop Analysis</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-on-surface-variant/40 text-sm">remove</span> <span class="text-on-surface-variant/50">Drone Swarm Control</span></li>
+        </ul>
+        <button onclick="selectPlan('pro')" class="w-full py-3.5 bg-primary hover:bg-primary/90 text-on-primary font-black text-xs uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">Upgrade to Pro</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="plan-card glass rounded-2xl border border-outline-variant/20 p-7 flex flex-col" style="background:rgba(137,206,255,0.03)">
+        <div class="mb-5">
+          <span class="text-[10px] font-black uppercase tracking-widest text-tertiary">Enterprise</span>
+          <h3 class="text-3xl font-black font-headline mt-1">₹8,999<span class="text-base font-normal text-on-surface-variant">/mo</span></h3>
+          <p class="text-xs text-on-surface-variant mt-1">For large agri-businesses & FPOs</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-7">
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> <strong>Unlimited</strong> vehicles</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> All Pro features included</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> Drone Swarm Control</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> Custom AI Model Training</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> Dedicated Support Manager</li>
+          <li class="flex items-center gap-2 text-xs"><span class="material-symbols-outlined text-tertiary text-sm">check_circle</span> White-label API access</li>
+        </ul>
+        <button onclick="selectPlan('enterprise')" class="w-full py-3.5 border-2 border-tertiary/40 hover:bg-tertiary/10 text-tertiary font-black text-xs uppercase tracking-widest rounded-xl transition-all">Contact Sales</button>
+      </div>
+    </div>
+
+    <!-- Add-Ons -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-7">
+      <h3 class="font-headline font-bold text-lg mb-5">Vehicle Add-Ons <span class="text-xs text-on-surface-variant font-normal ml-2">(Pay per additional vehicle slot)</span></h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-5 bg-surface-highest/40 rounded-xl border border-outline-variant/10">
+          <p class="text-[10px] uppercase text-on-surface-variant tracking-widest mb-2">Extra Tractor Slot</p>
+          <h4 class="text-xl font-black font-headline text-on-surface">₹499<span class="text-xs font-normal text-on-surface-variant">/mo</span></h4>
+          <p class="text-xs text-on-surface-variant mt-1 mb-4">Per additional heavy machine registered</p>
+          <button onclick="addAddon('tractor')" class="w-full py-2 border border-outline-variant/30 hover:border-primary/40 hover:text-primary text-xs font-bold uppercase rounded-lg transition-all">Add Slot</button>
+        </div>
+        <div class="p-5 bg-surface-highest/40 rounded-xl border border-outline-variant/10">
+          <p class="text-[10px] uppercase text-on-surface-variant tracking-widest mb-2">Extra Drone Slot</p>
+          <h4 class="text-xl font-black font-headline text-tertiary">₹299<span class="text-xs font-normal text-on-surface-variant">/mo</span></h4>
+          <p class="text-xs text-on-surface-variant mt-1 mb-4">Per additional UAV or scout drone</p>
+          <button onclick="addAddon('drone')" class="w-full py-2 border border-outline-variant/30 hover:border-tertiary/40 hover:text-tertiary text-xs font-bold uppercase rounded-lg transition-all">Add Slot</button>
+        </div>
+        <div class="p-5 bg-surface-highest/40 rounded-xl border border-outline-variant/10">
+          <p class="text-[10px] uppercase text-on-surface-variant tracking-widest mb-2">Field AI Booster</p>
+          <h4 class="text-xl font-black font-headline text-secondary">₹799<span class="text-xs font-normal text-on-surface-variant">/mo</span></h4>
+          <p class="text-xs text-on-surface-variant mt-1 mb-4">Unlimited soil analysis + crop predictions</p>
+          <button onclick="addAddon('ai')" class="w-full py-2 border border-outline-variant/30 hover:border-secondary/40 hover:text-secondary text-xs font-bold uppercase rounded-lg transition-all">Add Booster</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ BILLING ═══════════════ -->
+  <div id="tab-content-billing" class="hidden animate-slide space-y-6">
+    <!-- Payment Method -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-6">Payment Method</h3>
+      <div id="payment-form">
+        <div class="p-5 mb-4 border border-primary/30 bg-primary/5 rounded-xl flex items-center gap-4">
+          <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1">credit_card</span>
+          <div class="flex-1">
+            <p class="font-bold text-sm">Visa •••• •••• •••• 4242</p>
+            <p class="text-xs text-on-surface-variant">Expires 08/2027</p>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Primary</span>
+        </div>
+        <!-- Add Card -->
+        <div class="space-y-4">
+          <h4 class="font-bold text-sm text-on-surface-variant uppercase tracking-widest text-[10px]">Add New Card</h4>
+          <input type="text" placeholder="Cardholder Name" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm placeholder:text-on-surface-variant/40"/>
+          <input type="text" placeholder="Card Number  1234 5678 9012 3456" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm placeholder:text-on-surface-variant/40 font-mono"/>
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" placeholder="MM / YY" class="bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm placeholder:text-on-surface-variant/40"/>
+            <input type="text" placeholder="CVV" class="bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm placeholder:text-on-surface-variant/40"/>
+          </div>
+          <!-- UPI -->
+          <div class="h-px bg-outline-variant/20 my-2"></div>
+          <div class="flex items-center gap-4">
+            <div class="flex-1 h-px bg-outline-variant/10"></div>
+            <span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Or pay via UPI</span>
+            <div class="flex-1 h-px bg-outline-variant/10"></div>
+          </div>
+          <input type="text" placeholder="yourname@upi" class="w-full bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-sm placeholder:text-on-surface-variant/40"/>
+          <button onclick="processPayment()" class="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-on-primary font-headline font-black text-sm uppercase tracking-widest rounded-xl shadow-primary/20 shadow-lg active:scale-95 transition-all">
+            Process Payment Securely
+          </button>
+          <p class="text-center text-[10px] text-on-surface-variant">🔒 Payments secured by 256-bit SSL encryption. No card data stored on our servers.</p>
+        </div>
+      </div>
+      <!-- Payment Result -->
+      <div id="payment-result" class="hidden mt-5 p-5 rounded-xl border border-primary/30 bg-primary/5 text-center">
+        <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings:'FILL' 1">task_alt</span>
+        <h4 class="font-headline font-bold text-lg mt-2 text-primary">Payment Successful!</h4>
+        <p class="text-sm text-on-surface-variant mt-1">Your subscription has been activated. Receipt sent to admin@agriopti.ai</p>
+      </div>
+    </div>
+
+    <!-- Invoice History -->
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <h3 class="font-headline font-bold text-lg mb-5">Invoice History</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4 p-4 bg-surface-highest/40 rounded-xl">
+          <span class="material-symbols-outlined text-primary text-sm">receipt_long</span>
+          <div class="flex-1"><p class="text-sm font-bold">Agri Pro — March 2026</p><p class="text-xs text-on-surface-variant">24 Mar 2026 · ₹2,499.00</p></div>
+          <span class="text-[10px] text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">Paid</span>
+          <button class="text-xs text-on-surface-variant hover:text-primary">Download PDF</button>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-surface-highest/40 rounded-xl">
+          <span class="material-symbols-outlined text-primary text-sm">receipt_long</span>
+          <div class="flex-1"><p class="text-sm font-bold">Agri Pro — February 2026</p><p class="text-xs text-on-surface-variant">24 Feb 2026 · ₹2,499.00</p></div>
+          <span class="text-[10px] text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">Paid</span>
+          <button class="text-xs text-on-surface-variant hover:text-primary">Download PDF</button>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-surface-highest/40 rounded-xl">
+          <span class="material-symbols-outlined text-secondary text-sm">receipt_long</span>
+          <div class="flex-1"><p class="text-sm font-bold">Extra Drone Slot x2</p><p class="text-xs text-on-surface-variant">15 Feb 2026 · ₹598.00</p></div>
+          <span class="text-[10px] text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">Paid</span>
+          <button class="text-xs text-on-surface-variant hover:text-primary">Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ USERS ═══════════════ -->
+  <div id="tab-content-users" class="hidden animate-slide">
+    <div class="glass rounded-xl border border-outline-variant/10 p-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline font-bold text-lg">All Users</h3>
+        <div class="flex gap-3">
+          <input type="text" placeholder="Search users..." class="bg-surface-highest border border-outline-variant/20 rounded-lg px-4 py-2 text-sm placeholder:text-on-surface-variant/40 w-48"/>
+          <select class="bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-2 text-sm text-on-surface-variant">
+            <option>All Plans</option><option>Free</option><option>Pro</option><option>Enterprise</option>
+          </select>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="grid grid-cols-5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+          <span>User</span><span>Plan</span><span>Vehicles</span><span>Status</span><span>Joined</span>
+        </div>
+        <div class="flex items-center p-4 bg-surface-highest/40 rounded-xl hover:border hover:border-primary/20 transition-all cursor-pointer grid grid-cols-5 gap-4">
+          <div class="flex items-center gap-3 col-span-1">
+            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-sm">R</div>
+            <div><p class="text-sm font-bold">Ram Krishna</p><p class="text-[10px] text-on-surface-variant">ram.krishna@agrifarm.in</p></div>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full w-fit">Pro</span>
+          <span class="text-sm">12 / 15</span>
+          <span class="text-[10px] font-bold text-primary">✓ Verified</span>
+          <span class="text-xs text-on-surface-variant">Mar 2026</span>
+        </div>
+        <div class="flex items-center p-4 bg-surface-highest/40 rounded-xl hover:border hover:border-primary/20 transition-all cursor-pointer grid grid-cols-5 gap-4">
+          <div class="flex items-center gap-3 col-span-1">
+            <div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-black text-sm">S</div>
+            <div><p class="text-sm font-bold">Sujatha Rao</p><p class="text-[10px] text-on-surface-variant">sujatha.fields@gmail.com</p></div>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full w-fit">Pro</span>
+          <span class="text-sm">7 / 15</span>
+          <span class="text-[10px] font-bold text-primary">✓ Verified</span>
+          <span class="text-xs text-on-surface-variant">Feb 2026</span>
+        </div>
+        <div class="flex items-center p-4 bg-surface-highest/40 rounded-xl hover:border hover:border-primary/20 transition-all cursor-pointer grid grid-cols-5 gap-4">
+          <div class="flex items-center gap-3 col-span-1">
+            <div class="w-8 h-8 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary font-black text-sm">A</div>
+            <div><p class="text-sm font-bold">Anand Farms</p><p class="text-[10px] text-on-surface-variant">admin@anand-farms.co.in</p></div>
+          </div>
+          <span class="text-[10px] font-bold text-tertiary bg-tertiary/10 px-2 py-1 rounded-full w-fit">Enterprise</span>
+          <span class="text-sm">∞ Unlimited</span>
+          <span class="text-[10px] font-bold text-primary">✓ Verified</span>
+          <span class="text-xs text-on-surface-variant">Jan 2026</span>
+        </div>
+        <div class="flex items-center p-4 bg-surface-highest/40 rounded-xl hover:border hover:border-outline-variant/30 transition-all cursor-pointer grid grid-cols-5 gap-4">
+          <div class="flex items-center gap-3 col-span-1">
+            <div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-on-surface-variant font-black text-sm">M</div>
+            <div><p class="text-sm font-bold">Meena Devi</p><p class="text-[10px] text-on-surface-variant">meena.devi55@gmail.com</p></div>
+          </div>
+          <span class="text-[10px] font-bold text-on-surface-variant bg-surface-bright px-2 py-1 rounded-full w-fit">Free</span>
+          <span class="text-sm">2 / 2</span>
+          <span class="text-[10px] font-bold text-error">⚠ Pending</span>
+          <span class="text-xs text-on-surface-variant">Mar 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Tab switching
+function showTab(name) {
+  document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(el => {
+    el.classList.remove('tab-active');
+    el.classList.add('text-on-surface-variant');
+  });
+  document.getElementById('tab-content-' + name).classList.remove('hidden');
+  const activeBtn = document.getElementById('tab-' + name);
+  activeBtn.classList.add('tab-active');
+  activeBtn.classList.remove('text-on-surface-variant');
+}
+
+// 2FA
+function toggle2FA() {
+  const tog = document.getElementById('tfa-toggle');
+  tog.checked = !tog.checked;
+}
+function select2FA(method) {
+  ['sms','email','app'].forEach(m => {
+    const el = document.getElementById('2fa-' + m);
+    el.classList.toggle('border-primary/40', m === method);
+    el.classList.toggle('bg-primary/5', m === method);
+    el.classList.toggle('border-outline-variant/20', m !== method);
+    el.querySelector('span.material-symbols-outlined').className = `material-symbols-outlined ${m === method ? 'text-primary' : 'text-on-surface-variant'} mb-2`;
+    el.querySelector('span.text-\\[10px\\]').innerText = m === method ? '✓ Active' : 'Click to enable';
+    if(m===method) el.querySelector('span.text-\\[10px\\]').classList.replace('text-on-surface-variant','text-primary');
+  });
+}
+function sendOTP() {
+  const res = document.getElementById('otp-result');
+  res.classList.remove('hidden');
+  res.className = 'text-xs font-bold text-tertiary bg-tertiary/10 px-4 py-2 rounded-lg border border-tertiary/20';
+  res.innerText = '📨 OTP sent to your registered device!';
+}
+function verifyOTP() {
+  const inputs = document.querySelectorAll('.otp-input');
+  const code = [...inputs].map(i => i.value).join('');
+  const res = document.getElementById('otp-result');
+  res.classList.remove('hidden');
+  if (code.length === 6) {
+    res.className = 'text-xs font-bold text-primary bg-primary/10 px-4 py-2 rounded-lg border border-primary/20';
+    res.innerText = '✓ Verification successful! 2FA is working correctly.';
+  } else {
+    res.className = 'text-xs font-bold text-error bg-error/10 px-4 py-2 rounded-lg border border-error/20';
+    res.innerText = '✗ Please enter all 6 digits.';
+  }
+}
+
+// OTP auto-advance
+document.querySelectorAll('.otp-input').forEach((input, i, arr) => {
+  input.addEventListener('input', () => {
+    if (input.value.toString().length >= 1 && i < arr.length - 1) arr[i+1].focus();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !input.value && i > 0) arr[i-1].focus();
+  });
+});
+
+// Email verification
+function simulateVerification() {
+  const res = document.getElementById('verify-result');
+  res.classList.remove('hidden');
+  res.classList.add('flex');
+  res.innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">mark_email_read</span> Verification email dispatched to ram.krishna@agrifarm.in`;
+}
+
+// Plan selection
+function selectPlan(plan) {
+  showTab('billing');
+}
+
+// Add-On
+function addAddon(type) {
+  const names = { tractor: 'Tractor Slot (₹499/mo)', drone: 'Drone Slot (₹299/mo)', ai: 'Field AI Booster (₹799/mo)' };
+  alert(`✓ ${names[type]} added to your cart. Proceed to Billing to complete payment.`);
+  showTab('billing');
+}
+
+// Billing toggle
+function toggleBilling() {
+  const tog = document.getElementById('billing-toggle');
+  tog.checked = !tog.checked;
+}
+
+// Payment
+function processPayment() {
+  const form = document.getElementById('payment-form');
+  const result = document.getElementById('payment-result');
+  form.style.opacity = '0.5';
+  setTimeout(() => {
+    form.classList.add('hidden');
+    result.classList.remove('hidden');
+  }, 1500);
+}
+</script>
+</body>
+</html>

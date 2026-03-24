@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriOpti AI Preview Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #95d4b3;
+            --on-primary: #76b394;
+            --secondary: #ffb77d;
+            --tertiary: #89ceff;
+            --surface: #091421;
+            --surface-low: #121c2a;
+            --surface-high: #2b3544;
+            --on-surface: #d9e3f6;
+            --outline-ghost: rgba(65, 72, 68, 0.15);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+        .sidebar {
+            width: 320px;
+            background-color: rgba(18, 28, 42, 0.85); /* surface-low w/ blur */
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--outline-ghost);
+            z-index: 10;
+        }
+        .logo-area {
+            margin-bottom: 3.5rem;
+        }
+        .logo-area h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+        .logo-area p {
+            font-size: 0.875rem;
+            color: var(--on-surface);
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex-grow: 1;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--on-surface);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(149,212,179,0.15), rgba(118,179,148,0.05));
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(5, 15, 28, 0.06);
+        }
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            background-color: var(--surface);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        iframe.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .status-orbital {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin-right: 1rem;
+            position: relative;
+        }
+        .active .status-orbital::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <h1>AgriOpti AI</h1>
+            <p>The Precision Cultivator Portal</p>
+        </div>
+        <nav id="nav-menu">
+            <div class="nav-item active" data-target="dashboard_overview">
+                <div class="status-orbital"></div>
+                Dashboard Overview
+            </div>
+            <div class="nav-item" data-target="soil_crop_analyzer">
+                <div class="status-orbital"></div>
+                Soil Crop Analyzer
+            </div>
+            <div class="nav-item" data-target="irrigation_water_prediction">
+                <div class="status-orbital"></div>
+                Irrigation Prediction
+            </div>
+            <div class="nav-item" data-target="fleet_management">
+                <div class="status-orbital"></div>
+                Fleet Management
+            </div>
+            <div class="nav-item" data-target="live_fleet_map">
+                <div class="status-orbital"></div>
+                Live Fleet Map
+            </div>
+            <div style="height:1px;background:rgba(65,72,68,0.15);margin:0.75rem 0"></div>
+            <div class="nav-item" data-target="admin_panel">
+                <div class="status-orbital"></div>
+                Admin Panel
+            </div>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <iframe id="frame-dashboard_overview" src="dashboard_overview/code.html" class="active"></iframe>
+        <iframe id="frame-soil_crop_analyzer" src="soil_crop_analyzer/code.html"></iframe>
+        <iframe id="frame-irrigation_water_prediction" src="irrigation_water_prediction/code.html"></iframe>
+        <iframe id="frame-fleet_management" src="fleet_management/code.html"></iframe>
+        <iframe id="frame-live_fleet_map" src="live_fleet_map/code.html"></iframe>
+        <iframe id="frame-admin_panel" src="admin_panel/code.html"></iframe>
+    </main>
+
+    <div id="login-overlay" style="position: fixed; inset: 0; z-index: 1000; background: var(--surface); transition: opacity 0.5s ease;">
+        <iframe src="secure_login/code.html" style="width: 100%; height: 100%; border: none; pointer-events: all; opacity: 1;"></iframe>
+    </div>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const frames = document.querySelectorAll('main.main-content iframe');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Update nav
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Update frames
+                const target = item.getAttribute('data-target');
+                frames.forEach(frame => {
+                    if (frame.id === 'frame-' + target) {
+                        frame.classList.add('active');
+                    } else {
+                        frame.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        window.addEventListener('message', (e) => {
+            if (e.data === 'login_success') {
+                const overlay = document.getElementById('login-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    // Show dashboard
+                    // Assuming 'nav-dashboard' is the ID for the dashboard nav item,
+                    // but based on HTML, it should be the one with data-target="dashboard_overview"
+                    document.querySelector('[data-target="dashboard_overview"]').click();
+                }, 500);
+            }
+            
+            if (e.data === 'asset_registered') {
+                const fleetMapIframe = document.getElementById('frame-live_fleet_map');
+                if (fleetMapIframe) {
+                    fleetMapIframe.contentWindow.location.reload();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

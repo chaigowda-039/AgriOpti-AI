@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriOpti AI Pro - Soil &amp; Crop Analyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#2b3544",
+                        "inverse-surface": "#d9e3f6",
+                        "surface-container-low": "#121c2a",
+                        "secondary": "#ffb77d",
+                        "on-tertiary-container": "#2bb0f5",
+                        "surface-container-lowest": "#050f1c",
+                        "surface-container-high": "#212b39",
+                        "on-primary-fixed": "#002114",
+                        "tertiary-fixed": "#c9e6ff",
+                        "on-background": "#d9e3f6",
+                        "on-surface-variant": "#c1c8c2",
+                        "secondary-fixed-dim": "#ffb77d",
+                        "on-surface": "#d9e3f6",
+                        "surface-tint": "#95d4b3",
+                        "inverse-on-surface": "#27313f",
+                        "background": "#091421",
+                        "on-tertiary": "#00344d",
+                        "tertiary-container": "#00405e",
+                        "surface-bright": "#303a48",
+                        "outline": "#8b938d",
+                        "on-secondary-fixed": "#2f1500",
+                        "surface": "#091421",
+                        "surface-container": "#16202e",
+                        "primary": "#95d4b3",
+                        "inverse-primary": "#2c694e",
+                        "on-primary-container": "#76b394",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "primary-fixed": "#b1f0ce",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "surface-dim": "#091421",
+                        "outline-variant": "#414844",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#89ceff",
+                        "primary-fixed-dim": "#95d4b3",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#0e5138",
+                        "surface-variant": "#2b3544",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-primary": "#003824",
+                        "secondary-container": "#d97707",
+                        "on-secondary-container": "#432100",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#4d2600",
+                        "primary-container": "#00452e",
+                        "error-container": "#93000a"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(18, 28, 42, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen">
+<!-- TopAppBar -->
+
+<!-- SideNavBar -->
+
+<!-- Main Content Canvas -->
+<main class="  min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Header Section -->
+
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Entry Tools -->
+<section class="col-span-12 lg:col-span-5 space-y-8">
+<!-- Soil Testing Section -->
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/10 shadow-xl">
+<h2 class="text-xl font-bold font-headline mb-6 text-on-surface">Soil Diagnostics Suite</h2>
+<div class="space-y-4">
+<!-- Auto-Location Map -->
+<button class="w-full group relative overflow-hidden flex items-center gap-4 p-4 rounded-lg bg-surface-container-highest border border-outline-variant/5 hover:border-primary/30 transition-all duration-300">
+<div class="h-12 w-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">location_searching</span>
+</div>
+<div class="text-left">
+<p class="font-bold text-on-surface group-hover:text-primary transition-colors">Auto-Location Soil Map</p>
+<p class="text-xs text-on-surface-variant">Sync satellite geospatial chemistry data</p>
+</div>
+</button>
+<!-- Image Upload TFJS -->
+<div class="relative group cursor-pointer" id="upload-container">
+<input id="image-upload" onchange="handleImageUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer z-10" type="file" accept="image/*"/>
+<div id="upload-ui" class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-highest border border-outline-variant/5 group-hover:border-secondary/30 transition-all duration-300">
+<div id="upload-icon-container" class="h-12 w-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span id="upload-icon" class="material-symbols-outlined">add_a_photo</span>
+</div>
+<div class="text-left w-full">
+<div class="flex items-center justify-between gap-2">
+    <div class="flex items-center gap-2">
+        <p id="upload-title" class="font-bold text-on-surface group-hover:text-secondary transition-colors">Upload Image (TFJS)</p>
+        <span class="text-[8px] bg-secondary/20 text-secondary px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">GPU Opt</span>
+    </div>
+</div>
+<p id="upload-subtitle" class="text-xs text-on-surface-variant line-clamp-1">Mobile-ready soil texture vision model</p>
+</div>
+</div>
+</div>
+                    <!-- Manual Entry -->
+                    <div class="p-6 rounded-xl bg-surface-container-highest border border-outline-variant/5 shadow-lg relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-6">
+                            <span class="material-symbols-outlined text-tertiary">edit_note</span>
+                            <h3 class="font-bold text-sm text-on-surface uppercase tracking-widest">Manual Chemical Entry</h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-5 relative z-10">
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 ml-1">Nitrogen (N)</label>
+                                <input id="input-n" class="w-full bg-surface-container-low border border-outline-variant/20 rounded-md py-2.5 px-3 text-sm focus:ring-1 focus:ring-tertiary focus:border-tertiary text-on-surface transition-all" placeholder="e.g. 45" type="number"/>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 ml-1">Phosphorus (P)</label>
+                                <input id="input-p" class="w-full bg-surface-container-low border border-outline-variant/20 rounded-md py-2.5 px-3 text-sm focus:ring-1 focus:ring-tertiary focus:border-tertiary text-on-surface transition-all" placeholder="e.g. 12" type="number"/>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 ml-1">Potassium (K)</label>
+                                <input id="input-k" class="w-full bg-surface-container-low border border-outline-variant/20 rounded-md py-2.5 px-3 text-sm focus:ring-1 focus:ring-tertiary focus:border-tertiary text-on-surface transition-all" placeholder="e.g. 38" type="number"/>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 ml-1">pH Level</label>
+                                <input id="input-ph" class="w-full bg-surface-container-low border border-outline-variant/20 rounded-md py-2.5 px-3 text-sm focus:ring-1 focus:ring-tertiary focus:border-tertiary text-on-surface transition-all" placeholder="e.g. 6.5" step="0.1" type="number"/>
+                            </div>
+                        </div>
+                        <button onclick="analyzeSoil()" id="analyze-btn" class="mt-6 w-full relative group overflow-hidden rounded-lg bg-surface-container-low border border-tertiary/30 p-[1px]">
+                            <span class="absolute inset-0 bg-gradient-to-r from-tertiary/40 via-secondary/40 to-emerald-500/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                            <div class="relative flex items-center justify-center gap-2 bg-gradient-to-br from-surface-container-low to-surface-container-highest py-3 px-4 rounded-[7px] text-tertiary font-bold tracking-widest text-xs uppercase hover:bg-transparent hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-sm">science</span>
+                                Run Diagnostic Analysis
+                            </div>
+                        </button>
+                    </div>
+</div>
+</div>
+                    <!-- TFJS Logic Mock: Processing Status -->
+                    <div id="processing-status" class="bg-surface-container-lowest border border-outline-variant/10 p-6 rounded-xl relative overflow-hidden transition-all duration-300">
+                        <div id="engine-glow" class="absolute top-0 right-0 w-32 h-32 bg-primary/0 rounded-full -mr-16 -mt-16 blur-3xl transition-all duration-500"></div>
+                        <div class="relative flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="relative">
+                                    <div id="engine-spinner" class="w-10 h-10 border-2 border-outline-variant/20 rounded-full border-t-outline-variant/50 transition-colors duration-300"></div>
+                                    <span id="engine-icon" class="material-symbols-outlined absolute inset-0 flex items-center justify-center text-slate-400 text-lg transition-colors" style="font-variation-settings: 'FILL' 1;">memory</span>
+                                </div>
+                                <div>
+                                    <h4 id="engine-text" class="text-sm font-bold text-slate-400 transition-colors">Neural Engine Idle</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-mono">TensorFlow.js 4.12.0 • WebGL Backend</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="engine-latency" class="text-xs font-bold text-slate-500 font-mono">LATENCY: --</span>
+                            </div>
+                        </div>
+                    </div>
+</section>
+<!-- Right Column: Results & Recommendations -->
+<section class="col-span-12 lg:col-span-7 space-y-8">
+<!-- Results Panel -->
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/10 shadow-2xl relative">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="text-xl font-bold font-headline text-on-surface">Substrate Health Indicators</h2>
+<p class="text-xs text-on-surface-variant mt-1 italic">Last sync: 2 minutes ago via Field IoT Mesh</p>
+</div>
+<span class="px-3 py-1 bg-emerald-500/10 text-primary text-[10px] font-black rounded-md uppercase border border-primary/20 tracking-widest">Optimized</span>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<!-- Moisture Radar Mockup -->
+<div class="p-4 bg-surface-container-highest rounded-lg flex flex-col items-center justify-center aspect-square">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2b3544" stroke-width="2"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#89ceff" stroke-dasharray="78, 100" stroke-width="2"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-black text-tertiary">78%</span>
+<span class="text-[8px] uppercase tracking-tighter text-slate-500 font-bold">Moisture</span>
+</div>
+</div>
+<div class="mt-4 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[78%]"></div>
+</div>
+</div>
+<!-- Soil Composition Grid -->
+<div class="space-y-4">
+<div class="p-4 rounded-lg bg-surface-container-lowest border-l-4 border-secondary/50">
+<p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Organic Matter</p>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-black text-on-surface">4.2%</span>
+<span class="material-symbols-outlined text-primary mb-1 text-sm">trending_up</span>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-lowest border-l-4 border-tertiary/50">
+<p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Nitrogen Yield</p>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-black text-on-surface">High</span>
+<span class="material-symbols-outlined text-primary mb-1 text-sm">check_circle</span>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-lowest border-l-4 border-emerald-500/50">
+<p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Microbial Activity</p>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-black text-on-surface">Peak</span>
+<span class="material-symbols-outlined text-primary mb-1 text-sm" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+                <!-- Crop Recommendation Card -->
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-800 p-1 rounded-xl shadow-2xl group flex flex-col h-[520px]">
+                    <div class="bg-surface-container-low flex flex-col h-full w-full rounded-[10px] p-6 relative overflow-hidden">
+                        <!-- Background Decor -->
+                        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700 pointer-events-none"></div>
+                        
+                        <div class="relative z-10 shrink-0">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="bg-primary/20 p-2 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                                </div>
+                                <h3 class="text-sm font-bold uppercase tracking-[0.3em] text-primary">Top Recommended Crops</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Scrollable Crops List -->
+                        <div id="crop-recommendations" class="relative z-10 flex-1 overflow-y-auto pr-3 space-y-6 custom-scrollbar pb-4">
+                            <!-- 1. Maize -->
+                            <div class="crop-item flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl bg-surface-container-highest border border-outline-variant/10 hover:border-emerald-500/30 transition-all" data-base-score="98.4" data-n-req="high" data-ph-min="5.8" data-ph-max="7.0">
+                                <div class="relative shrink-0 h-24 w-24 rounded-lg overflow-hidden shadow-lg shadow-black/40">
+                                    <img alt="Maize" class="object-cover w-full h-full transform hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhGEtDM7T9rnnmMMbdYVKXqvcoUiA8jJzsyFMUhz2hZOUTm2L3rCe9y0EWw-SkTcOp0rWGoPgaNFmMTI_rj5kfW9SGt4K-5_Q_oN71cpT6TmKRZ-JfEbBMAf1fB-Y_FRHglM9cb5GiEMOqCu8o1pHQKF9OcjVjMO87VgTz-rBuyEhBX8drVq6uOYljYQjcuUhYjpyBAXJoWTU9sOVFF9E3MXZsZXEVDLb2uNiHQ7laWqrQyjRQHgqFdhJ5ByfiXGW7JcjIilSUAlM"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                </div>
+                                <div class="flex-1 w-full mt-2 sm:mt-0 text-center sm:text-left">
+                                    <h4 class="text-2xl font-black text-on-surface tracking-tighter">Maize</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-medium mt-1">High N requirement | Deep root system</p>
+                                    <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                        <div class="text-xs font-bold text-primary confidence-text">98.4% Confidence</div>
+                                        <div class="h-1.5 w-full max-w-[120px] bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-primary w-[98%] transition-all duration-1000 confidence-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 2. Ragi -->
+                            <div class="crop-item flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl bg-surface-container-highest border border-outline-variant/10 hover:border-secondary/30 transition-all" data-base-score="95.2" data-n-req="low" data-ph-min="5.5" data-ph-max="8.0">
+                                <div class="relative shrink-0 h-24 w-24 rounded-lg overflow-hidden shadow-lg shadow-black/40">
+                                    <img alt="Ragi" class="object-cover w-full h-full transform hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHg8ITdU9ujrE_ziqppe5ZJv1wAbeLRQ5oo4GpmhYaBqTMprAJ0E9RZUuGMc3bX3F0Jpf-BKJggly5gGsjkDVyF7wosQsDMof0Dr8QGPMWXnQsf1IwOc9D3GI4GZ4adxLhPjV9O3xVPmNMIleyyqbFIkvyw-GSRCGVNyTqzqu3SZMyBMWmOKASZCKQaN4YUD0Tja7HravUb1diLN39yB3kNT8KT6rlf_mnUGAMio8MFwgoVPOZ1bHLfFvbCQqlSURK1GLlpBnhfME"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                </div>
+                                <div class="flex-1 w-full mt-2 sm:mt-0 text-center sm:text-left">
+                                    <h4 class="text-2xl font-black text-on-surface tracking-tighter">Ragi (Millet)</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-medium mt-1">Drought resistant | Low N requirement</p>
+                                    <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                        <div class="text-xs font-bold text-secondary confidence-text">95.2% Confidence</div>
+                                        <div class="h-1.5 w-full max-w-[120px] bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-secondary w-[95%] transition-all duration-1000 confidence-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 3. Sugarcane -->
+                            <div class="crop-item flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl bg-surface-container-highest border border-outline-variant/10 hover:border-tertiary/30 transition-all" data-base-score="88.1" data-n-req="high" data-ph-min="6.0" data-ph-max="7.5">
+                                <div class="relative shrink-0 h-24 w-24 rounded-lg overflow-hidden shadow-lg shadow-black/40">
+                                    <img alt="Sugarcane" class="object-cover w-full h-full transform hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1596541662998-f2a969df2dd3?auto=format&fit=crop&w=400&q=80"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                </div>
+                                <div class="flex-1 w-full mt-2 sm:mt-0 text-center sm:text-left">
+                                    <h4 class="text-2xl font-black text-on-surface tracking-tighter">Sugarcane</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-medium mt-1">Cash crop | High N & K requirement</p>
+                                    <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                        <div class="text-xs font-bold text-tertiary confidence-text">88.1% Confidence</div>
+                                        <div class="h-1.5 w-full max-w-[120px] bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-tertiary w-[88%] transition-all duration-1000 confidence-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 4. Groundnut -->
+                            <div class="crop-item flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl bg-surface-container-highest border border-outline-variant/10 hover:border-[#ff9800]/30 transition-all" data-base-score="82.5" data-n-req="low" data-ph-min="5.9" data-ph-max="7.0">
+                                <div class="relative shrink-0 h-24 w-24 rounded-lg overflow-hidden shadow-lg shadow-black/40">
+                                    <img alt="Groundnut" class="object-cover w-full h-full transform hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1598967926117-64259b34eaee?auto=format&fit=crop&w=400&q=80"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                </div>
+                                <div class="flex-1 w-full mt-2 sm:mt-0 text-center sm:text-left">
+                                    <h4 class="text-2xl font-black text-on-surface tracking-tighter">Groundnut</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-medium mt-1">Legume | High Phosphorus need</p>
+                                    <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                        <div class="text-xs font-bold text-[#ff9800] confidence-text">82.5% Confidence</div>
+                                        <div class="h-1.5 w-full max-w-[120px] bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-[#ff9800] w-[82%] transition-all duration-1000 confidence-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 5. Tomatoes -->
+                            <div class="crop-item flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl bg-surface-container-highest border border-outline-variant/10 hover:border-red-500/30 transition-all" data-base-score="76.3" data-n-req="med" data-ph-min="6.0" data-ph-max="6.8">
+                                <div class="relative shrink-0 h-24 w-24 rounded-lg overflow-hidden shadow-lg shadow-black/40">
+                                    <img alt="Tomatoes" class="object-cover w-full h-full transform hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=400&q=80"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                </div>
+                                <div class="flex-1 w-full mt-2 sm:mt-0 text-center sm:text-left">
+                                    <h4 class="text-2xl font-black text-on-surface tracking-tighter">Tomatoes</h4>
+                                    <p class="text-[10px] text-on-surface-variant font-medium mt-1">Short cycle | pH sensitive</p>
+                                    <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                        <div class="text-xs font-bold text-red-500 confidence-text">76.3% Confidence</div>
+                                        <div class="h-1.5 w-full max-w-[120px] bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-red-500 w-[76%] transition-all duration-1000 confidence-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 mt-6 shrink-0 flex gap-4 pt-4 border-t border-outline-variant/10">
+                            <button class="flex-1 bg-primary text-on-primary font-bold px-4 py-3 rounded-lg text-sm transition-transform active:scale-95 shadow-lg shadow-primary/20 hover:scale-[1.02]">
+                                Project Yield Forecast
+                            </button>
+                            <button class="bg-surface-container-highest text-on-surface border border-outline-variant/20 font-bold px-4 py-3 rounded-lg text-sm transition-colors hover:bg-surface-bright active:scale-95">
+                                Seed Market
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(149, 212, 179, 0.2); border-radius: 4px; }
+                    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(149, 212, 179, 0.5); }
+                </style>
+</div>
+<!-- Soil Stratigraphy List (Custom Agri Component) -->
+<div class="space-y-2">
+<div class="flex justify-between items-center px-4 mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500">Substrate Stratigraphy</h3>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer">info</span>
+</div>
+<div class="p-4 rounded-lg bg-secondary-container/10 border-l-8 border-secondary flex justify-between items-center group cursor-help transition-all hover:pl-6">
+<div class="flex gap-4 items-center">
+<span class="text-xs font-mono text-secondary">0-15cm</span>
+<span class="font-bold text-on-surface">Topsoil Horizon (Active)</span>
+</div>
+<span class="text-sm font-bold text-secondary">Humus Rich</span>
+</div>
+<div class="p-4 rounded-lg bg-secondary-container/5 border-l-8 border-secondary/60 flex justify-between items-center group cursor-help transition-all hover:pl-6">
+<div class="flex gap-4 items-center">
+<span class="text-xs font-mono text-secondary/70">15-40cm</span>
+<span class="font-bold text-on-surface">Eluvial Horizon</span>
+</div>
+<span class="text-sm font-bold text-secondary/70">Loamy Sand</span>
+</div>
+<div class="p-4 rounded-lg bg-slate-800/20 border-l-8 border-slate-700 flex justify-between items-center group cursor-help transition-all hover:pl-6">
+<div class="flex gap-4 items-center">
+<span class="text-xs font-mono text-slate-500">40-100cm</span>
+<span class="font-bold text-on-surface">Subsoil Foundation</span>
+</div>
+<span class="text-sm font-bold text-slate-500">Dense Clay</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on Details/Transaction focused screens but relevant for Analysis) -->
+<button class="fixed bottom-8 right-8 h-16 w-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</button>
+
+<script>
+    function analyzeSoil() {
+        const nInput = document.getElementById('input-n').value;
+        const pInput = document.getElementById('input-p').value;
+        const kInput = document.getElementById('input-k').value;
+        const phInput = document.getElementById('input-ph').value;
+        
+        const btn = document.getElementById('analyze-btn');
+        btn.querySelector('div').innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span> Analyzing...';
+        
+        // Processing Animation Mock
+        const statusBox = document.getElementById('processing-status');
+        const spinner = document.getElementById('engine-spinner');
+        const icon = document.getElementById('engine-icon');
+        const text = document.getElementById('engine-text');
+        const latency = document.getElementById('engine-latency');
+        const glow = document.getElementById('engine-glow');
+        
+        statusBox.classList.add('border-primary/50');
+        glow.classList.replace('bg-primary/0', 'bg-tertiary/20');
+        spinner.classList.replace('border-outline-variant/50', 'border-tertiary');
+        spinner.classList.add('animate-spin');
+        icon.classList.replace('text-slate-400', 'text-tertiary');
+        icon.style.fontVariationSettings = "'FILL' 1";
+        text.classList.replace('text-slate-400', 'text-on-surface');
+        text.innerText = "Processing Geochemical Matrix...";
+        
+        let ms = 0;
+        const latInterval = setInterval(() => {
+            ms += Math.floor(Math.random() * 15);
+            latency.innerText = `LATENCY: ${ms}ms`;
+        }, 50);
+
+        setTimeout(() => {
+            clearInterval(latInterval);
+            latency.innerText = `LATENCY: 142ms`;
+            
+            // Revert Processing Animation
+            statusBox.classList.remove('border-primary/50');
+            glow.classList.replace('bg-tertiary/20', 'bg-primary/5');
+            spinner.classList.remove('animate-spin');
+            spinner.classList.replace('border-tertiary', 'border-primary/50');
+            icon.classList.replace('text-tertiary', 'text-primary');
+            text.innerText = "Analysis Complete";
+            btn.querySelector('div').innerHTML = '<span class="material-symbols-outlined text-sm">science</span> Run Diagnostic Analysis';
+
+            // Extract logic
+            const N = nInput ? parseInt(nInput) : 45;
+            const P = pInput ? parseInt(pInput) : 12;
+            const K = kInput ? parseInt(kInput) : 38;
+            const pH = phInput ? parseFloat(phInput) : 6.5;
+
+            // Recalculate crop confidences
+            const cropItems = document.querySelectorAll('.crop-item');
+            const container = document.getElementById('crop-recommendations');
+            
+            let itemsArr = Array.from(cropItems);
+            itemsArr.forEach(item => {
+                let baseScore = parseFloat(item.getAttribute('data-base-score'));
+                const nReq = item.getAttribute('data-n-req');
+                const phMin = parseFloat(item.getAttribute('data-ph-min'));
+                const phMax = parseFloat(item.getAttribute('data-ph-max'));
+                
+                // N impact
+                if(nReq === 'high' && N > 50) baseScore += 5;
+                if(nReq === 'high' && N < 30) baseScore -= 10;
+                if(nReq === 'low' && N > 60) baseScore -= 5;
+                
+                // pH impact
+                if(pH >= phMin && pH <= phMax) {
+                    baseScore += 3;
+                } else if(pH < phMin) {
+                    baseScore -= (phMin - pH) * 10;
+                } else if(pH > phMax) {
+                    baseScore -= (pH - phMax) * 10;
+                }
+                
+                // Add some random ML jitter
+                baseScore += (Math.random() * 2 - 1);
+                
+                // Clamp
+                if(baseScore > 99.9) baseScore = 99.9;
+                if(baseScore < 10) baseScore = Math.floor(Math.random() * 20) + 10;
+                
+                item.setAttribute('data-current-score', baseScore);
+            });
+            
+            // Sort items by new score
+            itemsArr.sort((a, b) => b.getAttribute('data-current-score') - a.getAttribute('data-current-score'));
+            
+            // Re-append to container and animate
+            itemsArr.forEach((item, index) => {
+                container.appendChild(item); // Reorders DOM
+                
+                const score = parseFloat(item.getAttribute('data-current-score')).toFixed(1);
+                const textEl = item.querySelector('.confidence-text');
+                const barEl = item.querySelector('.confidence-bar');
+                
+                // Small animation delay for reflow
+                setTimeout(() => {
+                    textEl.innerText = score + '% Confidence';
+                    barEl.style.width = score + '%';
+                }, index * 100);
+            });
+            
+            // Scroll to top of list
+            container.scrollTo({ top: 0, behavior: 'smooth' });
+
+        }, 1500);
+    }
+</script>
+<script>
+    function handleImageUpload(event) {
+        if(!event.target.files || event.target.files.length === 0) return;
+        
+        const file = event.target.files[0];
+        
+        // Update Upload UI immediately
+        document.getElementById('upload-title').innerText = "Analyzing Texture...";
+        document.getElementById('upload-subtitle').innerText = file.name;
+        document.getElementById('upload-icon').innerText = "query_stats";
+        document.getElementById('upload-icon').classList.add('animate-pulse');
+        document.getElementById('upload-ui').classList.replace('border-outline-variant/5', 'border-secondary/50');
+
+        // Processing Animation Mock (Neural Engine)
+        const statusBox = document.getElementById('processing-status');
+        const spinner = document.getElementById('engine-spinner');
+        const icon = document.getElementById('engine-icon');
+        const text = document.getElementById('engine-text');
+        const latency = document.getElementById('engine-latency');
+        const glow = document.getElementById('engine-glow');
+        
+        statusBox.classList.add('border-primary/50');
+        glow.classList.replace('bg-primary/0', 'bg-secondary/20'); // Use secondary color for Image ML
+        spinner.classList.replace('border-outline-variant/50', 'border-secondary');
+        spinner.classList.add('animate-spin');
+        icon.classList.replace('text-slate-400', 'text-secondary');
+        icon.innerText = "visibility";
+        icon.style.fontVariationSettings = "'FILL' 1";
+        text.classList.replace('text-slate-400', 'text-on-surface');
+        text.innerText = "Running Vision Convolution...";
+        
+        let ms = 0;
+        const latInterval = setInterval(() => {
+            ms += Math.floor(Math.random() * 25);
+            latency.innerText = `LATENCY: ${ms}ms`;
+        }, 50);
+
+        setTimeout(() => {
+            clearInterval(latInterval);
+            latency.innerText = `LATENCY: 231ms`; // Slightly longer for "vision"
+            
+            // Revert Engine Animation
+            statusBox.classList.remove('border-primary/50');
+            glow.classList.replace('bg-secondary/20', 'bg-primary/5');
+            spinner.classList.remove('animate-spin');
+            spinner.classList.replace('border-secondary', 'border-primary/50');
+            icon.classList.replace('text-secondary', 'text-primary');
+            icon.innerText = "memory";
+            text.innerText = "Vision Analysis Complete";
+
+            // Update Upload UI
+            document.getElementById('upload-icon').innerText = "verified";
+            document.getElementById('upload-icon').classList.remove('animate-pulse');
+            document.getElementById('upload-icon-container').classList.replace('text-secondary', 'text-emerald-500');
+            document.getElementById('upload-icon-container').classList.replace('bg-secondary/10', 'bg-emerald-500/20');
+            document.getElementById('upload-title').innerText = "Red Loamy Soil Detected";
+            document.getElementById('upload-title').classList.replace('group-hover:text-secondary', 'group-hover:text-emerald-500');
+            document.getElementById('upload-subtitle').innerHTML = `<span class="text-secondary font-bold">89% confidence</span> &middot; Low pH/High Iron profile`;
+
+            // Magic sorting logic based on Red Loamy Soil detection
+            // Groundnut and Ragi thrive in Red Loamy Soil.
+            const cropItems = document.querySelectorAll('.crop-item');
+            const container = document.getElementById('crop-recommendations');
+            
+            let itemsArr = Array.from(cropItems);
+            itemsArr.forEach(item => {
+                let baseScore = parseFloat(item.getAttribute('data-base-score'));
+                let cropName = item.querySelector('h4').innerText.toLowerCase();
+                
+                // Vision Model BIAS
+                if(cropName.includes('groundnut')) {
+                    baseScore += 18; // Massive boost for Red soil
+                } else if(cropName.includes('ragi')) {
+                    baseScore += 12; // Good boost
+                } else if(cropName.includes('maize')) {
+                    baseScore -= 10; // Red soil isn't best for Maize without heavy fert
+                } else if(cropName.includes('sugarcane')) {
+                    baseScore -= 15; // Too harsh for sugarcane usually
+                } else if(cropName.includes('tomatoes')) {
+                    baseScore += 5; // Decent
+                }
+
+                // Add random ML jitter
+                baseScore += (Math.random() * 2 - 1);
+                
+                // Clamp
+                if(baseScore > 99.4) baseScore = (98 + Math.random()).toFixed(1);
+                if(baseScore < 10) baseScore = Math.floor(Math.random() * 20) + 10;
+                
+                item.setAttribute('data-current-score', baseScore);
+            });
+            
+            // Sort items by new score
+            itemsArr.sort((a, b) => b.getAttribute('data-current-score') - a.getAttribute('data-current-score'));
+            
+            // Re-append to container and animate
+            itemsArr.forEach((item, index) => {
+                container.appendChild(item); // Reorders DOM
+                
+                const score = parseFloat(item.getAttribute('data-current-score')).toFixed(1);
+                const textEl = item.querySelector('.confidence-text');
+                const barEl = item.querySelector('.confidence-bar');
+                
+                // Small animation delay for reflow
+                setTimeout(() => {
+                    textEl.innerText = score + '% Confidence';
+                    barEl.style.width = score + '%';
+                    
+                    // Highlight the top 2 specifically
+                    if(index === 0 || index === 1) {
+                        item.classList.add('border-emerald-500/50', 'shadow-[0_0_15px_rgba(16,185,129,0.1)]');
+                        setTimeout(() => {
+                           item.classList.remove('border-emerald-500/50', 'shadow-[0_0_15px_rgba(16,185,129,0.1)]');
+                        }, 2000);
+                    }
+                }, index * 100);
+            });
+            
+            // Scroll to top of list
+            container.scrollTo({ top: 0, behavior: 'smooth' });
+
+        }, 2200);
+    }
+</script>
+</body></html>

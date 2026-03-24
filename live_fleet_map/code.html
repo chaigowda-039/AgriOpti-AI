@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriOpti AI Pro - Live Fleet Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#2b3544",
+              "inverse-surface": "#d9e3f6",
+              "surface-container-low": "#121c2a",
+              "secondary": "#ffb77d",
+              "on-tertiary-container": "#2bb0f5",
+              "surface-container-lowest": "#050f1c",
+              "surface-container-high": "#212b39",
+              "on-primary-fixed": "#002114",
+              "tertiary-fixed": "#c9e6ff",
+              "on-background": "#d9e3f6",
+              "on-surface-variant": "#c1c8c2",
+              "secondary-fixed-dim": "#ffb77d",
+              "on-surface": "#d9e3f6",
+              "surface-tint": "#95d4b3",
+              "inverse-on-surface": "#27313f",
+              "background": "#091421",
+              "on-tertiary": "#00344d",
+              "tertiary-container": "#00405e",
+              "surface-bright": "#303a48",
+              "outline": "#8b938d",
+              "on-secondary-fixed": "#2f1500",
+              "surface": "#091421",
+              "surface-container": "#16202e",
+              "primary": "#95d4b3",
+              "inverse-primary": "#2c694e",
+              "on-primary-container": "#76b394",
+              "secondary-fixed": "#ffdcc3",
+              "on-secondary-fixed-variant": "#6e3900",
+              "primary-fixed": "#b1f0ce",
+              "on-tertiary-fixed-variant": "#004c6e",
+              "surface-dim": "#091421",
+              "outline-variant": "#414844",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#89ceff",
+              "primary-fixed-dim": "#95d4b3",
+              "on-error": "#690005",
+              "on-primary-fixed-variant": "#0e5138",
+              "surface-variant": "#2b3544",
+              "tertiary-fixed-dim": "#89ceff",
+              "on-tertiary-fixed": "#001e2f",
+              "on-primary": "#003824",
+              "secondary-container": "#d97707",
+              "on-secondary-container": "#432100",
+              "error": "#ffb4ab",
+              "on-secondary": "#4d2600",
+              "primary-container": "#00452e",
+              "error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-gradient-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(9, 20, 33, 0.4) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<!-- TopAppBar -->
+
+<!-- SideNavBar -->
+
+<!-- Main Content Canvas -->
+<main class="  h-screen relative overflow-hidden bg-background">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 z-0">
+<div id="map-layer" class="w-full h-full bg-slate-900 overflow-hidden relative transition-all duration-1000">
+<img id="static-map-img" class="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale scale-110 transition-opacity duration-1000" data-alt="High resolution satellite view of geometric green and brown agricultural fields in Doddaballapura with irrigation circles and grid patterns" data-location="Doddaballapura" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9i9vW0WOQ1wbECHtNKleh6Nexr-kbG8hzirVrXJel1EOEjDmobxk_yRFGwea4pSVLkaefR_IL2MU9sTyWhaNJUUL7Kp_3o30izamBJSJuQpCW5nP1ACtdvEtoGizJU7i76DF0BsaBJ2xbY681dUUk9cwpX6V8_148fIs9DnNQ7HQjc7TnriV-xrNC56ZAx8WuMGpa4uS9Q09T28bOJppm4P-iQl77CPIFeo0rY_YxzqQpBio7BccT6YtHnhcUmyyNzQ7JnpGTi5Q"/>
+<div class="absolute inset-0 map-gradient-overlay"></div>
+<!-- Field Polygons (SVG Overlay) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 1000 1000">
+<!-- Field A -->
+<path class="fill-primary/20 stroke-primary stroke-2" d="M200,300 L450,280 L480,500 L220,550 Z"></path>
+<text class="fill-primary font-headline font-bold text-xs opacity-60" x="300" y="400">FIELD ALPHA</text>
+<!-- Field B -->
+<path class="fill-secondary/20 stroke-secondary stroke-2" d="M500,270 L800,250 L830,450 L520,480 Z"></path>
+<text class="fill-secondary font-headline font-bold text-xs opacity-60" x="630" y="350">FIELD BETA</text>
+<!-- Field C -->
+<path class="fill-tertiary/20 stroke-tertiary stroke-2" d="M250,600 L550,580 L580,850 L280,880 Z"></path>
+<text class="fill-tertiary font-headline font-bold text-xs opacity-60" x="380" y="730">FIELD GAMMA</text>
+</svg>
+<!-- Vehicle Markers -->
+<!-- Tractors -->
+<div onclick="focusVehicle(37.3346, -122.0090, 'Tractor #01')" class="absolute top-[35%] left-[30%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110">
+<div class="relative">
+<div class="absolute inset-0 animate-ping rounded-full bg-primary/40"></div>
+<div class="relative bg-surface-container-highest p-2 rounded-lg border border-primary/40 shadow-xl group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="agriculture">agriculture</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold text-on-surface whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                            TRACTOR #01 (ACTIVE)
+                        </div>
+</div>
+</div>
+<div onclick="focusVehicle(37.3300, -122.0150, 'Tractor #02')" class="absolute top-[45%] left-[70%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110">
+<div class="bg-surface-container-highest p-2 rounded-lg border border-primary/20 shadow-xl group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary/60" data-icon="agriculture">agriculture</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold text-on-surface whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                            TRACTOR #02 (IDLE)
+                        </div>
+</div>
+<div onclick="focusVehicle(37.3400, -121.9900, 'Tractor #04')" class="absolute top-[75%] left-[45%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer ring-2 ring-error ring-offset-4 ring-offset-background animate-pulse hover:z-50">
+<div class="bg-surface-container-highest p-2 rounded-lg border border-error shadow-xl">
+<span class="material-symbols-outlined text-error" data-icon="agriculture">agriculture</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-error text-on-error px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">
+                        TRACTOR #04 (ALERT)
+                    </div>
+</div>
+<!-- Drones -->
+<div onclick="focusVehicle(37.3320, -122.0000, 'Scout Drone A')" class="absolute top-[30%] left-[60%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110">
+<div class="bg-surface-container-highest p-2 rounded-full border border-tertiary/40 shadow-xl group-hover:border-tertiary transition-colors">
+<span class="material-symbols-outlined text-tertiary" data-icon="airplanemode_active">airplanemode_active</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold text-tertiary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                            SCOUT DRONE A (FLYING)
+                        </div>
+</div>
+<div onclick="focusVehicle(37.3380, -122.0200, 'Scout Drone B')" class="absolute top-[60%] left-[20%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110">
+<div class="bg-surface-container-highest p-2 rounded-full border border-tertiary/40 shadow-xl group-hover:border-tertiary transition-colors">
+<span class="material-symbols-outlined text-tertiary" data-icon="airplanemode_active">airplanemode_active</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold text-tertiary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                            SCOUT DRONE B (FLYING)
+                        </div>
+</div>
+<!-- Harvester -->
+<div onclick="focusVehicle(37.3250, -121.9950, 'Heavy Harvester')" class="absolute top-[40%] left-[75%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110">
+<div class="bg-surface-container-highest p-2 rounded-lg border border-secondary/40 shadow-xl group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="precision_manufacturing">precision_manufacturing</span>
+</div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold text-secondary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                            HEAVY HARVESTER (ACTIVE)
+                        </div>
+</div>
+<!-- Dynamically Registered Assets Container -->
+<div id="dynamic-markers" class="absolute inset-0 z-20 pointer-events-none"></div>
+</div>
+</div>
+<!-- Real-time Alert Banner -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4">
+<div class="bg-error-container/90 backdrop-blur-md text-on-error-container px-6 py-3 rounded-xl border border-error/20 flex items-center justify-between shadow-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined font-variation-settings: 'FILL' 1;" data-icon="warning">warning</span>
+<span class="font-headline font-bold text-sm tracking-tight">ALERT: Tractor #04 nearing Field Gamma boundary</span>
+</div>
+<button class="text-xs font-black uppercase tracking-widest hover:underline">Deploy Override</button>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute top-6 right-6 z-30 flex flex-col gap-3">
+<div class="bg-surface-container-low/80 backdrop-blur-md rounded-xl shadow-[0_0_30px_rgba(149,212,179,0.15)] border border-primary/30 group">
+    <button id="sync-gps-btn" onclick="detectFleetLocation()" class="flex items-center gap-2 p-3 text-primary hover:bg-surface-bright rounded-lg transition-colors relative overflow-hidden">
+        <span class="material-symbols-outlined absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+        <span class="material-symbols-outlined relative z-10" id="sync-icon">my_location</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest relative z-10 pr-2" id="sync-text">Sync GPS Base</span>
+    </button>
+</div>
+<div class="bg-surface-container-low/80 backdrop-blur-md p-1 rounded-xl shadow-2xl flex flex-col gap-1 border border-outline-variant/10">
+<button class="p-3 text-on-surface hover:bg-surface-bright rounded-lg transition-colors"><span class="material-symbols-outlined">add</span></button>
+<div class="h-px bg-outline-variant/20 mx-2"></div>
+<button class="p-3 text-on-surface hover:bg-surface-bright rounded-lg transition-colors"><span class="material-symbols-outlined">remove</span></button>
+</div>
+<div class="bg-surface-container-low/80 backdrop-blur-md p-1 rounded-xl shadow-2xl border border-outline-variant/10">
+<button class="p-3 text-on-surface hover:bg-surface-bright rounded-lg transition-colors"><span class="material-symbols-outlined">layers</span></button>
+</div>
+<div class="bg-surface-container-low/80 backdrop-blur-md p-1 rounded-xl shadow-2xl border border-outline-variant/10">
+<button class="p-3 text-emerald-400 hover:bg-surface-bright rounded-lg transition-colors"><span class="material-symbols-outlined">filter_alt</span></button>
+</div>
+</div>
+<!-- Floating Info Cards (Bento Style) -->
+<div class="absolute bottom-6 left-6 z-30 flex gap-4 overflow-x-auto pb-2 max-w-[calc(100%-400px)] no-scrollbar">
+    <!-- Fleet Status -->
+    <div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl border border-outline-variant/10 min-w-[160px] shadow-2xl">
+        <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Fleet Status</span>
+            <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+        </div>
+        <div class="flex items-end gap-2">
+            <span class="text-3xl font-headline font-extrabold text-on-surface">06</span>
+            <span class="text-[10px] font-bold text-primary mb-1">Active</span>
+        </div>
+    </div>
+    
+    <!-- Temperature -->
+    <div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl border border-outline-variant/10 min-w-[160px] shadow-2xl">
+        <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Core Temp</span>
+            <span class="material-symbols-outlined text-[#ffb77d] text-sm font-variation-settings: 'FILL' 1;">thermostat</span>
+        </div>
+        <div class="flex items-end gap-2">
+            <span id="stat-temp" class="text-3xl font-headline font-extrabold text-on-surface">--</span>
+            <span class="text-[10px] font-bold text-[#ffb77d] mb-1">°C</span>
+        </div>
+    </div>
+    
+    <!-- Precipitation / Rain Detect -->
+    <div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl border border-outline-variant/10 min-w-[160px] shadow-2xl transition-colors duration-500" id="stat-rain-card">
+        <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Precipitation</span>
+            <span class="material-symbols-outlined text-tertiary text-sm" id="stat-rain-icon">umbrella</span>
+        </div>
+        <div class="flex items-end gap-2">
+            <span id="stat-rain" class="text-3xl font-headline font-extrabold text-on-surface">--</span>
+            <span class="text-[10px] font-bold text-tertiary mb-1">mm</span>
+        </div>
+    </div>
+    
+    <!-- Wind Speed -->
+    <div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl border border-outline-variant/10 min-w-[160px] shadow-2xl">
+        <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Crosswind</span>
+            <span class="material-symbols-outlined text-slate-400 text-sm">air</span>
+        </div>
+        <div class="flex items-end gap-2">
+            <span id="stat-wind" class="text-3xl font-headline font-extrabold text-on-surface">--</span>
+            <span class="text-[10px] font-bold text-slate-400 mb-1">km/h</span>
+        </div>
+    </div>
+    
+    <!-- Soil Condition -->
+    <div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl border border-outline-variant/10 min-w-[180px] shadow-2xl">
+        <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Subsoil Status</span>
+            <span class="material-symbols-outlined text-emerald-500 text-sm font-variation-settings: 'FILL' 1;">grass</span>
+        </div>
+        <div class="flex items-end gap-2 mt-2">
+            <div id="stat-soil" class="text-sm font-bold text-on-surface truncate">Awaiting GPS...</div>
+        </div>
+        <div class="w-full h-1 bg-surface-container-highest rounded-full mt-2 overflow-hidden">
+            <div id="stat-soil-bar" class="h-full bg-slate-500 w-0 transition-all duration-1000"></div>
+        </div>
+    </div>
+</div>
+<!-- Side Detail Panel (Expandable) -->
+<div id="asset-panel" class="absolute top-6 bottom-6 right-6 w-80 bg-surface-container-low/80 backdrop-blur-2xl rounded-2xl border border-outline-variant/10 shadow-2xl z-40 flex flex-col overflow-hidden transition-all duration-300">
+<!-- Panel Header -->
+<div class="p-5 border-b border-outline-variant/10 shrink-0">
+    <div class="flex items-center justify-between">
+        <h3 class="font-headline font-extrabold text-lg text-on-surface">Asset Intelligence</h3>
+        <button onclick="closeAssetPanel()" class="text-slate-500 hover:text-on-surface transition-colors p-1 rounded-lg hover:bg-surface-container-highest">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+</div>
+<!-- Vehicle Card -->
+<div class="px-5 pt-5 shrink-0">
+    <div id="vehicle-card" class="bg-surface-container-highest p-4 rounded-xl border border-error/30 relative overflow-hidden transition-all duration-500">
+        <div class="absolute top-0 right-0 p-2">
+            <span id="v-alert-icon" class="material-symbols-outlined text-error text-lg" style="font-variation-settings:'FILL' 1">error</span>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+            <div id="v-icon-wrap" class="p-2.5 bg-error/20 rounded-xl">
+                <span id="v-icon" class="material-symbols-outlined text-error text-2xl">agriculture</span>
+            </div>
+            <div>
+                <p id="v-type" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tractor Unit</p>
+                <h4 id="v-name" class="font-headline font-bold text-on-surface text-base">Tractor #04</h4>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="bg-background/40 p-3 rounded-xl">
+                <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Speed</p>
+                <p id="v-speed" class="text-base font-headline font-black text-on-surface">4.2 km/h</p>
+            </div>
+            <div class="bg-background/40 p-3 rounded-xl">
+                <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Battery</p>
+                <p id="v-battery" class="text-base font-headline font-black text-error">12%</p>
+                <div class="w-full h-1 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
+                    <div id="v-battery-bar" class="h-full bg-error transition-all duration-700" style="width:12%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Scrollable Body -->
+<div class="flex-1 overflow-y-auto px-5 pb-5 mt-5 space-y-6" style="scrollbar-width:thin;scrollbar-color:#2b3544 transparent">
+    <!-- Live Telemetry -->
+    <div>
+        <h5 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Live Telemetry</h5>
+        <div class="space-y-1">
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Status</span>
+                <span id="v-status-badge" class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 bg-error/15 text-error rounded-full">Alert</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Current Task</span>
+                <span id="v-task" class="text-xs font-bold text-on-surface text-right max-w-[140px] truncate">Field Gamma Tilling</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Latitude</span>
+                <span id="v-lat" class="text-xs font-bold font-mono text-tertiary">13.2917° N</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Longitude</span>
+                <span id="v-lng" class="text-xs font-bold font-mono text-tertiary">77.5394° E</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Connectivity</span>
+                <span id="v-connectivity" class="text-xs font-bold text-primary">5G - Stable</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 border-b border-outline-variant/5">
+                <span class="text-xs font-medium text-slate-400">Coverage Area</span>
+                <span id="v-area" class="text-xs font-bold text-on-surface">Field Gamma</span>
+            </div>
+        </div>
+    </div>
+    <!-- Live Metrics -->
+    <div>
+        <h5 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">System Metrics</h5>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="bg-surface-container-highest p-3 rounded-xl text-center">
+                <p class="text-[8px] text-slate-500 uppercase font-bold mb-1">CPU</p>
+                <p id="v-cpu" class="text-sm font-black font-headline text-on-surface">68%</p>
+            </div>
+            <div class="bg-surface-container-highest p-3 rounded-xl text-center">
+                <p class="text-[8px] text-slate-500 uppercase font-bold mb-1">Signal</p>
+                <p id="v-signal" class="text-sm font-black font-headline text-primary">94%</p>
+            </div>
+            <div class="bg-surface-container-highest p-3 rounded-xl text-center">
+                <p class="text-[8px] text-slate-500 uppercase font-bold mb-1">Uptime</p>
+                <p id="v-uptime" class="text-sm font-black font-headline text-on-surface">6h 12m</p>
+            </div>
+        </div>
+    </div>
+    <!-- Event Log -->
+    <div>
+        <h5 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Event Log</h5>
+        <div id="v-events" class="space-y-3"></div>
+    </div>
+</div>
+<!-- Emergency Shutdown -->
+<div class="p-5 mt-auto shrink-0 border-t border-outline-variant/10">
+    <button id="emergency-btn" onclick="emergencyShutdown()" class="w-full py-4 bg-error/80 hover:bg-error text-on-error font-headline font-black text-xs uppercase tracking-widest rounded-xl shadow-xl shadow-error/20 active:scale-[0.98] transition-all">
+        🔴 Emergency Shutdown
+    </button>
+</div>
+</div>
+</main>
+<!-- Map Search (Embedded in Top) -->
+<div class="fixed top-20 left-72 z-30 w-80">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-400 transition-colors">search</span>
+<input class="w-full bg-slate-900/60 backdrop-blur-md border-0 ring-1 ring-emerald-900/20 rounded-full py-3 pl-12 pr-4 text-xs font-medium text-on-surface placeholder:text-slate-500 focus:ring-emerald-500 focus:bg-slate-900 transition-all shadow-xl" placeholder="Search vehicle or field ID..." type="text"/>
+</div>
+</div>
+
+<script>
+    let mapInitialized = false;
+
+    // Detect User Location and set Google Map Base
+    function detectFleetLocation() {
+        const btnText = document.getElementById('sync-text');
+        const btnIcon = document.getElementById('sync-icon');
+        btnText.innerText = "Connecting Satellite...";
+        btnIcon.classList.add('animate-spin');
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                updateMapIframe(lat, lon);
+                btnText.innerText = "Live GPS Active";
+                btnIcon.classList.remove('animate-spin');
+                btnIcon.innerText = "satellite_alt";
+                btnIcon.parentNode.parentNode.classList.replace('border-primary/30', 'border-primary');
+                mapInitialized = true;
+                
+                // Fetch Environmental constraints via Open-Meteo API
+                fetchEnvironmentData(lat, lon);
+            }, function(error) {
+                console.error("Error getting location: ", error);
+                const defaultLat = 13.2917;
+                const defaultLon = 77.5394;
+                // Fallback to coordinates
+                updateMapIframe(defaultLat, defaultLon); // Fallback to a base coord
+                btnText.innerText = "GPS Fallback";
+                btnIcon.classList.remove('animate-spin');
+                mapInitialized = true;
+                
+                fetchEnvironmentData(defaultLat, defaultLon);
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    // Embed Google Map given coordinates
+    function updateMapIframe(lat, lon) {
+        const mapLayer = document.getElementById('map-layer');
+        // Clear static image
+        mapLayer.innerHTML = '';
+        
+        const iframe = document.createElement('iframe');
+        iframe.className = "w-full h-full border-none opacity-0 transition-opacity duration-1000";
+        // Embed URL using the lat/lon
+        iframe.src = `https://maps.google.com/maps?q=${lat},${lon}&t=k&z=17&ie=UTF8&iwloc=&output=embed`; 
+        
+        iframe.onload = () => { iframe.classList.replace('opacity-0', 'opacity-60'); };
+        
+        mapLayer.appendChild(iframe);
+        
+        // Re-add gradient overlay for styling
+        const gradient = document.createElement('div');
+        gradient.className = "absolute inset-0 map-gradient-overlay pointer-events-none";
+        mapLayer.appendChild(gradient);
+    }
+
+    // ── Vehicle Data Store ─────────────────────────────────────────────
+    const vehicleDB = {
+        'Tractor #01': {
+            type: 'Tractor Unit', icon: 'agriculture', accent: 'primary', status: 'active',
+            speed: '5.8 km/h', battery: 88, task: 'North Field Ploughing',
+            lat: 37.3346, lng: -122.0090, area: 'Field Alpha',
+            connectivity: '5G - Stable', cpu: '42%', signal: '97%', uptime: '3h 44m',
+            events: [
+                { color: 'primary', title: 'Path Updated', time: '5 mins ago', loc: 'Field Alpha' },
+                { color: 'primary', title: 'Auto-Calibration OK', time: '22 mins ago', loc: 'Fleet Core' },
+            ]
+        },
+        'Tractor #02': {
+            type: 'Tractor Unit', icon: 'agriculture', accent: 'primary', status: 'idle',
+            speed: '0.0 km/h', battery: 61, task: 'Idle — Awaiting Dispatch',
+            lat: 37.3300, lng: -122.0150, area: 'Parking Bay 2',
+            connectivity: 'LTE - Stable', cpu: '12%', signal: '88%', uptime: '1h 05m',
+            events: [
+                { color: 'primary', title: 'Engine Standby', time: '9 mins ago', loc: 'Bay 2' },
+            ]
+        },
+        'Tractor #04': {
+            type: 'Tractor Unit', icon: 'agriculture', accent: 'error', status: 'alert',
+            speed: '4.2 km/h', battery: 12, task: 'Field Gamma Tilling',
+            lat: 37.3400, lng: -121.9900, area: 'Field Gamma',
+            connectivity: '5G - Stable', cpu: '68%', signal: '94%', uptime: '6h 12m',
+            events: [
+                { color: 'error',   title: 'Geofence Breach Warning', time: '2 mins ago',  loc: 'Field Gamma' },
+                { color: 'primary', title: 'Auto-Path Corrected',     time: '14 mins ago', loc: 'Fleet Core' },
+                { color: 'error',   title: 'Battery Critical <15%',   time: '31 mins ago', loc: 'Tractor #04' },
+            ]
+        },
+        'Scout Drone A': {
+            type: 'Scout Drone / UAV', icon: 'airplanemode_active', accent: 'tertiary', status: 'flying',
+            speed: '62 km/h', battery: 77, task: 'Aerial Crop Mapping',
+            lat: 37.3320, lng: -122.0000, area: 'Field Beta',
+            connectivity: '5G - Excellent', cpu: '55%', signal: '99%', uptime: '0h 48m',
+            events: [
+                { color: 'tertiary', title: 'Telemetry Stream Live', time: '1 min ago',  loc: 'Field Beta' },
+                { color: 'primary',  title: 'Wind Compensation +4°', time: '8 mins ago', loc: 'Autopilot' },
+            ]
+        },
+        'Scout Drone B': {
+            type: 'Scout Drone / UAV', icon: 'airplanemode_active', accent: 'tertiary', status: 'flying',
+            speed: '48 km/h', battery: 54, task: 'Perimeter Surveillance',
+            lat: 37.3380, lng: -122.0200, area: 'Field Gamma Border',
+            connectivity: 'LTE - Good', cpu: '49%', signal: '81%', uptime: '1h 22m',
+            events: [
+                { color: 'tertiary', title: 'Obstacle Avoided', time: '3 mins ago',  loc: 'Gamma Border' },
+                { color: 'primary',  title: 'Return Path Set',  time: '19 mins ago', loc: 'Autopilot' },
+            ]
+        },
+        'Heavy Harvester': {
+            type: 'Heavy Harvester', icon: 'precision_manufacturing', accent: 'secondary', status: 'active',
+            speed: '3.1 km/h', battery: 45, task: 'Wheat Harvesting Row 7-22',
+            lat: 37.3250, lng: -121.9950, area: 'Field Alpha South',
+            connectivity: '5G - Stable', cpu: '77%', signal: '92%', uptime: '4h 58m',
+            events: [
+                { color: 'secondary', title: 'Hopper 80% Full',      time: '6 mins ago',  loc: 'F-Alpha-S' },
+                { color: 'primary',   title: 'Yield Rate: 4.2 t/ha', time: '18 mins ago', loc: 'Fleet Core' },
+                { color: 'primary',   title: 'Blade Calibrated',     time: '55 mins ago', loc: 'Harvester' },
+            ]
+        },
+    };
+
+    // ── Populate Asset Intelligence Panel ───────────────────────────────
+    function populatePanel(vehicleName) {
+        const v = vehicleDB[vehicleName] || vehicleDB['Tractor #04'];
+        const accentColor = { primary: '#95d4b3', tertiary: '#89ceff', secondary: '#ffb77d', error: '#ffb4ab' };
+        const ac = v.accent;
+
+        document.getElementById('v-name').innerText = vehicleName;
+        document.getElementById('v-type').innerText = v.type;
+        document.getElementById('v-icon').innerText = v.icon;
+        document.getElementById('v-speed').innerText = v.speed;
+        document.getElementById('v-task').innerText = v.task;
+        document.getElementById('v-lat').innerText = v.lat.toFixed(4) + '° N';
+        document.getElementById('v-lng').innerText = Math.abs(v.lng).toFixed(4) + (v.lng < 0 ? '° W' : '° E');
+        document.getElementById('v-area').innerText = v.area;
+        document.getElementById('v-connectivity').innerText = v.connectivity;
+        document.getElementById('v-cpu').innerText = v.cpu;
+        document.getElementById('v-signal').innerText = v.signal;
+        document.getElementById('v-uptime').innerText = v.uptime;
+
+        // Battery
+        const battEl = document.getElementById('v-battery');
+        const battBar = document.getElementById('v-battery-bar');
+        const battColor = v.battery < 20 ? 'text-error' : v.battery < 50 ? 'text-secondary' : 'text-primary';
+        const barColor  = v.battery < 20 ? 'bg-error' : v.battery < 50 ? 'bg-secondary' : 'bg-primary';
+        battEl.className = `text-base font-headline font-black ${battColor}`;
+        battEl.innerText = v.battery + '%';
+        battBar.className = `h-full ${barColor} transition-all duration-700`;
+        battBar.style.width = v.battery + '%';
+
+        // Status badge
+        const badge = document.getElementById('v-status-badge');
+        const statusMap = {
+            active:  { cls: 'bg-primary/15 text-primary',   label: 'Active' },
+            idle:    { cls: 'bg-slate-500/15 text-slate-400', label: 'Idle' },
+            alert:   { cls: 'bg-error/15 text-error',        label: 'Alert' },
+            flying:  { cls: 'bg-tertiary/15 text-tertiary',  label: 'Flying' },
+        };
+        const s = statusMap[v.status] || statusMap.active;
+        badge.className = `text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 ${s.cls} rounded-full`;
+        badge.innerText = s.label;
+
+        // Vehicle card border/icon color
+        const card = document.getElementById('vehicle-card');
+        const wrap = document.getElementById('v-icon-wrap');
+        const icon = document.getElementById('v-icon');
+        const alertIcon = document.getElementById('v-alert-icon');
+        card.className = `bg-surface-container-highest p-4 rounded-xl border border-${ac}/30 relative overflow-hidden transition-all duration-500`;
+        wrap.className  = `p-2.5 bg-${ac}/20 rounded-xl`;
+        icon.className  = `material-symbols-outlined text-${ac} text-2xl`;
+        alertIcon.className = `material-symbols-outlined text-${ac} text-lg`;
+        alertIcon.innerText = v.status === 'alert' ? 'error' : 'check_circle';
+
+        // Signal color
+        const signalEl = document.getElementById('v-signal');
+        const sigVal = parseInt(v.signal);
+        signalEl.className = `text-sm font-black font-headline ${sigVal > 80 ? 'text-primary' : sigVal > 60 ? 'text-secondary' : 'text-error'}`;
+
+        // Render events
+        const eventsEl = document.getElementById('v-events');
+        eventsEl.innerHTML = v.events.map(ev => `
+            <div class="flex gap-3 items-start">
+                <div class="w-1 min-h-[36px] bg-${ev.color} rounded-full mt-1"></div>
+                <div>
+                    <p class="text-[10px] font-bold text-on-surface">${ev.title}</p>
+                    <p class="text-[9px] text-slate-500 mt-0.5">${ev.time} • ${ev.loc}</p>
+                </div>
+            </div>`).join('');
+    }
+
+    function closeAssetPanel() {
+        document.getElementById('asset-panel').style.display = 'none';
+    }
+
+    function emergencyShutdown() {
+        const btn = document.getElementById('emergency-btn');
+        const name = document.getElementById('v-name').innerText;
+        btn.innerText = 'Sending Kill Signal...';
+        btn.disabled = true;
+        btn.classList.replace('bg-error/80', 'bg-surface-container-highest');
+        btn.classList.remove('hover:bg-error');
+
+        setTimeout(() => {
+            btn.innerText = `✓ ${name} Shutdown Confirmed`;
+            btn.classList.replace('bg-surface-container-highest', 'bg-primary/20');
+            btn.classList.add('text-primary', 'border', 'border-primary/20');
+            btn.classList.remove('text-on-error');
+        }, 1500);
+    }
+
+    // Call Real-time Weather Data Hook
+    function fetchEnvironmentData(lat, lon) {
+        // We fetch current temperature, rain, wind speed from the real 0-cost API Open-meteo
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,rain,wind_speed_10m&forecast_days=1`)
+            .then(res => res.json())
+            .then(data => {
+                const current = data.current;
+                
+                // Temp
+                document.getElementById('stat-temp').innerText = current.temperature_2m;
+                
+                // Wind
+                document.getElementById('stat-wind').innerText = current.wind_speed_10m;
+                
+                // Rain Detect
+                document.getElementById('stat-rain').innerText = current.rain;
+                if(current.rain > 0) {
+                    document.getElementById('stat-rain-card').classList.add('border-primary/50', 'bg-tertiary-container/20');
+                    document.getElementById('stat-rain-card').classList.remove('border-outline-variant/10', 'bg-surface-container-low/80');
+                    document.getElementById('stat-rain-icon').innerText = "rainy";
+                }
+                
+                // Infer Soil conditions contextually based on recent rain
+                const soilConditionText = document.getElementById('stat-soil');
+                const soilConditionBar = document.getElementById('stat-soil-bar');
+                
+                if (current.rain > 2) {
+                    soilConditionText.innerText = "Saturated / Muddy";
+                    soilConditionText.classList.replace('text-on-surface', 'text-tertiary');
+                    soilConditionBar.classList.replace('bg-slate-500', 'bg-tertiary');
+                    soilConditionBar.style.width = "90%";
+                } else if (current.rain > 0) {
+                    soilConditionText.innerText = "Optimum Dampness";
+                    soilConditionText.classList.replace('text-on-surface', 'text-emerald-500');
+                    soilConditionBar.classList.replace('bg-slate-500', 'bg-emerald-500');
+                    soilConditionBar.style.width = "65%";
+                } else if (current.temperature_2m > 30) {
+                    soilConditionText.innerText = "Arid / Dry Matrix";
+                    soilConditionText.classList.replace('text-on-surface', 'text-error');
+                    soilConditionBar.classList.replace('bg-slate-500', 'bg-error');
+                    soilConditionBar.style.width = "20%";
+                } else {
+                    soilConditionText.innerText = "Stable Base Moisture";
+                    soilConditionText.classList.replace('text-on-surface', 'text-primary');
+                    soilConditionBar.classList.replace('bg-slate-500', 'bg-primary');
+                    soilConditionBar.style.width = "50%";
+                }
+            }).catch(console.error);
+    }
+    
+    // Draw assets from localStorage
+    function renderCustomAssets() {
+        const fleet = JSON.parse(localStorage.getItem('fleet_assets') || '[]');
+        const container = document.getElementById('dynamic-markers');
+        container.innerHTML = '';
+        
+        fleet.forEach(asset => {
+            let icon = 'agriculture';
+            let colorStr = 'text-primary';
+            let borderStr = 'border-primary';
+            let bgStr = 'bg-primary';
+            
+            if(asset.type === 'drone') { 
+                icon = 'airplanemode_active'; 
+                colorStr = 'text-tertiary'; 
+                borderStr = 'border-tertiary'; 
+                bgStr = 'bg-tertiary';
+            }
+            if(asset.type === 'irrigation') { 
+                icon = 'water_drop'; 
+                colorStr = 'text-secondary'; 
+                borderStr = 'border-secondary'; 
+                bgStr = 'bg-secondary';
+            }
+            if(asset.type === 'utility') { 
+                icon = 'local_shipping'; 
+                colorStr = 'text-slate-400'; 
+                borderStr = 'border-slate-400'; 
+                bgStr = 'bg-slate-400';
+            }
+            
+            // Random visual position on static map just for show if not synced
+            const top = Math.floor(Math.random() * 40 + 30) + '%';
+            const left = Math.floor(Math.random() * 40 + 30) + '%';
+            
+            const el = document.createElement('div');
+            el.className = `absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110 pointer-events-auto`;
+            el.style.top = top;
+            el.style.left = left;
+            el.onclick = () => focusVehicle(asset.lat, asset.lng, asset.name);
+            
+            const shapeClass = (asset.type === 'drone') ? 'rounded-full' : 'rounded-lg';
+            
+            el.innerHTML = `
+                <div class="bg-surface-container-highest p-2 ${shapeClass} border ${borderStr}/40 shadow-xl group-hover:${borderStr} transition-colors">
+                    <span class="material-symbols-outlined ${colorStr}" style="font-variation-settings:'FILL' 1">${icon}</span>
+                </div>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold ${colorStr} whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                    ${asset.name.toUpperCase()} (LINKED)
+                </div>
+            `;
+            container.appendChild(el);
+        });
+        
+        // Update fleet count
+        if (fleet.length > 0) {
+            const countEl = document.querySelector('.flex.items-end.gap-2 .text-3xl.font-headline');
+            if(countEl) countEl.innerText = (6 + fleet.length).toString().padStart(2, '0');
+        }
+    }
+    
+    // ── Render Registered Fields from Fleet Management ─────────────────
+    function renderRegisteredFields() {
+        const fields = JSON.parse(localStorage.getItem('registered_fields') || '[]');
+        const container = document.getElementById('dynamic-markers');
+        if (!container) return;
+
+        // Remove old field markers
+        container.querySelectorAll('.field-pin').forEach(el => el.remove());
+
+        // Place any registered fields that don't overlap existing vehicles
+        fields.forEach((f, i) => {
+            // Spread pins visually across the map div
+            const positions = [
+                {top:'20%',left:'20%'},{top:'25%',left:'55%'},{top:'60%',left:'30%'},
+                {top:'55%',left:'65%'},{top:'35%',left:'80%'},{top:'75%',left:'50%'},
+                {top:'15%',left:'70%'},{top:'70%',left:'15%'}
+            ];
+            const pos = positions[i % positions.length];
+
+            const el = document.createElement('div');
+            el.className = 'field-pin absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer hover:z-50 transition-transform hover:scale-110 pointer-events-auto';
+            el.style.top  = pos.top;
+            el.style.left = pos.left;
+            el.onclick = () => {
+                updateMapIframe(f.lat, f.lng);
+                // Show field info in side panel
+                document.getElementById('v-name').innerText = f.name;
+                document.getElementById('v-type').innerText = 'Registered Field';
+                document.getElementById('v-icon').innerText = 'crop_square';
+                document.getElementById('v-icon').style.color = f.color;
+                document.getElementById('v-icon-wrap').style.background = f.color + '22';
+                document.getElementById('v-speed').innerText = `${f.size} ${f.unit}`;
+                document.getElementById('v-task').innerText = f.crop + ' Cultivation';
+                document.getElementById('v-lat').innerText  = f.lat.toFixed(4) + '° N';
+                document.getElementById('v-lng').innerText  = Math.abs(f.lng).toFixed(4) + (f.lng >= 0 ? '° E' : '° W');
+                document.getElementById('v-area').innerText  = f.address.split(',').slice(0,2).join(',');
+                document.getElementById('v-connectivity').innerText = 'GPS Tracked';
+                document.getElementById('v-cpu').innerText  = '--';
+                document.getElementById('v-signal').innerText = '--';
+                document.getElementById('v-uptime').innerText = '--';
+                document.getElementById('v-status-badge').innerText = 'Field';
+                document.getElementById('v-status-badge').className = 'text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 bg-primary/15 text-primary rounded-full';
+                document.getElementById('v-events').innerHTML = `
+                    <div class="flex gap-3 items-start">
+                        <div class="w-1 min-h-[36px] rounded-full mt-1" style="background:${f.color}"></div>
+                        <div>
+                            <p class="text-[10px] font-bold text-on-surface">Field Registered</p>
+                            <p class="text-[9px] text-slate-500 mt-0.5">Just now · ${f.address.split(',')[0]}</p>
+                        </div>
+                    </div>`;
+                document.getElementById('asset-panel').style.display = 'flex';
+            };
+
+            el.innerHTML = `
+                <div class="relative">
+                    <div class="p-2 rounded-xl border-2 shadow-xl backdrop-blur-sm" style="background:${f.color}22;border-color:${f.color}66">
+                        <span class="material-symbols-outlined" style="color:${f.color};font-variation-settings:'FILL' 1;font-size:22px">crop_square</span>
+                    </div>
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45" style="background:${f.color}66"></div>
+                </div>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 px-2 py-1 rounded-lg text-[10px] font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl" style="background:#121c2a;color:${f.color};border:1px solid ${f.color}44">
+                    ${f.name.toUpperCase()} · ${f.size}${f.unit}
+                </div>`;
+            container.appendChild(el);
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        renderCustomAssets();
+        renderRegisteredFields();
+        populatePanel('Tractor #04');
+    });
+
+    // ── Focus Vehicle: updates panel + map ────────────────────────────
+    function focusVehicle(lat, lng, vehicleName) {
+        // Show panel if hidden
+        const panel = document.getElementById('asset-panel');
+        panel.style.display = 'flex';
+
+        // Populate the dynamic panel
+        populatePanel(vehicleName);
+
+        // Reset emergency button state
+        const btn = document.getElementById('emergency-btn');
+        btn.innerText = '🔴 Emergency Shutdown';
+        btn.disabled = false;
+        btn.className = 'w-full py-4 bg-error/80 hover:bg-error text-on-error font-headline font-black text-xs uppercase tracking-widest rounded-xl shadow-xl shadow-error/20 active:scale-[0.98] transition-all';
+
+        // Move the Google Map to the vehicle coords
+        updateMapIframe(lat, lng);
+    }
+</script>
+</body></html>
